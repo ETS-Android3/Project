@@ -1,13 +1,21 @@
 package com.example.medicationreminderapplication;
 import android.content.Context;
 
+import org.json.JSONObject;
+
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.sql.Time;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class DataController {
 
@@ -36,19 +44,18 @@ public class DataController {
         //Create medication obj
         //Add Medication to list
     }
-//Checks for which medications are meant to be taken in the next 24 hours
-    Map<Date, Medication> NextMeds(){
+//Checks for which medications are meant to be taken in the next 'x' days
+    HashMap<Date, ArrayList<Medication>> NextMeds(int days){
         //Get current time
         Date curr = Calendar.getInstance().getTime();
         LocalDateTime current = LocalDateTime.now();
         //Get time in 24 hours
-        LocalDateTime tomorrow = current + LocalDateTime.of;
         //Check Daily Medications
         HashMap<Date, ArrayList<Medication>> nextMeds = new HashMap<Date, ArrayList<Medication>>();
         for (int i = 0; i < MedicationList.size(); i++){
             Medication currentMed = MedicationList.get(i);
-            for (int j = 0; j < currentMed.takenAt.size(); j++){
-                switch (currentMed.takenAt.get(j)){
+            for (int j = 0; j < currentMed.takenAt.size(); j++) {
+                switch (currentMed.takenAt.get(j)) {
                     case "WakeUp":
 
                         break;
@@ -60,13 +67,13 @@ public class DataController {
                         break;
                     case "Bedtime":
                         break;
+                }
             }
         }
-
         return nextMeds;
     }
 //Write Back To File
-    void writeToFile(){
+    public void writeToFile(){
         //Open File / Create File
         //Encrypt times
         //Write times
@@ -75,11 +82,71 @@ public class DataController {
         //close file
     }
 //Adds new medications
-    void newMed(String GTIN){
-        //Check if GTIN is already in the medication list
-        //If already in medication list, add more quantity
-        //If not in medication list add new medication
+    Medication newMed(String GTIN){
+        try{
+            //Find information from API
+            URL apiRequest = new URL("https://ampoule.herokuapp.com/gtin/"+GTIN);
+            HttpsURLConnection conn = (HttpsURLConnection) apiRequest.openConnection();
+            conn.setRequestMethod("GET");
+            conn.connect();
 
+            int responsecode = conn.getResponseCode();
+            if (responsecode != 200){
+                throw new RuntimeException();
+            }
+            else{
+            //Check if GTIN is already in the medication list
+            for (int index = 0; index < MedicationList.size(); index++){
+                //If already in medication list, add more quantity
+                if (MedicationList.get(index).GTIN == GTIN){
+                    MedicationList.get(index).numLeft += 5;
+                }
+            }
+            //If not in medication list add new medication
+            Medication newMED = new Medication();
+            MedicationList.add(newMED);
+            return newMED;
+            }
+        }
+        catch (Exception e){
+            return new Medication();
+        }
+    }
+//Get medication from API
+    String fromAPI(String GTIN){
+        String a = "AAA";
+        try{
+            //Find information from API
+            a = "A";
+            URL apiRequest = new URL("https://ampoule.herokuapp.com/gtin/"+GTIN);
+            a = "BBB";
+            HttpsURLConnection conn = (HttpsURLConnection) apiRequest.openConnection();
+            a = "CCC";
+            conn.setRequestMethod("GET");
+            a = "DDD";
+            conn.connect();
+            a="EEE";
+
+            int responsecode = conn.getResponseCode();
+            if (responsecode != 200){
+                return "responscodeError";
+            }
+            else{
+                //String inline = "";
+                //Scanner scanner = new Scanner(apiRequest.openStream());
+
+                //while (scanner.hasNext()){
+                //    inline += scanner.nextLine();
+                //}
+                //scanner.close();
+
+                //JSONObject data_obj = new JSONObject(inline);
+                return "AAA";
+            }
+        }
+        catch (Exception e){
+            return e.toString();
+        }
     }
 
 }

@@ -18,10 +18,10 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
-        android:layout_width="413dp"
-        android:layout_height="620dp"
-        tools:layout_editor_absoluteX="-3dp"
-        tools:layout_editor_absoluteY="49dp" />
+        android:layout_width="132dp"
+        android:layout_height="292dp"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="80dp" />
 
     <Button
         android:id="@+id/btnCalendar"
@@ -54,4 +54,34 @@
         android:text="undec"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/btnTest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"
+        android:text="test"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/editTxtGTIN"
+        tools:layout_editor_absoluteY="469dp" />
+
+    <EditText
+        android:id="@+id/editTxtGTIN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="472dp" />
+
+    <TextView
+        android:id="@+id/txtTest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/btnMedList"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
