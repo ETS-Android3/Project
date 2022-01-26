@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.Volley;
+
 import org.w3c.dom.Text;
 
 public class mainPage extends AppCompatActivity {
@@ -15,14 +17,10 @@ public class mainPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
-        dc = new DataController(getFilesDir());
+        dc = new DataController(getFilesDir(), Volley.newRequestQueue(this));
     }
 
     public void onClick(View view){
-        EditText text = (EditText)findViewById(R.id.editTxtGTIN);
-        String GTIN = text.getText().toString();
-        String name = dc.fromAPI(GTIN);
-        TextView txt = (TextView) findViewById(R.id.txtTest);
-        txt.setText(name);
+
     }
 }

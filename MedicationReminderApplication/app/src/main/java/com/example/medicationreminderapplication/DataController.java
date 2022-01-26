@@ -1,24 +1,29 @@
 package com.example.medicationreminderapplication;
-import android.content.Context;
+import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.sql.Time;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
+
+
 
 import javax.net.ssl.HttpsURLConnection;
 
 public class DataController {
 
+    private RequestQueue reqQueue;
     private LocalTime WakeUp;
     private LocalTime Breakfast;
     private LocalTime Lunch;
@@ -27,9 +32,11 @@ public class DataController {
     List<Medication> MedicationList;
 
 //Creates an instance of the Data controller and starts data reading
-    public DataController(File fileDirectory){
+    public DataController(File fileDirectory, RequestQueue requestQueue){
         //Instantiate Medication list
         MedicationList = new ArrayList<Medication>();
+        //Instantiate request queue
+        reqQueue = requestQueue;
         //Collect Data
         CollectData(fileDirectory);
     }
@@ -84,17 +91,7 @@ public class DataController {
 //Adds new medications
     Medication newMed(String GTIN){
         try{
-            //Find information from API
-            URL apiRequest = new URL("https://ampoule.herokuapp.com/gtin/"+GTIN);
-            HttpsURLConnection conn = (HttpsURLConnection) apiRequest.openConnection();
-            conn.setRequestMethod("GET");
-            conn.connect();
-
-            int responsecode = conn.getResponseCode();
-            if (responsecode != 200){
-                throw new RuntimeException();
-            }
-            else{
+            Medication a = fromAPI(GTIN);
             //Check if GTIN is already in the medication list
             for (int index = 0; index < MedicationList.size(); index++){
                 //If already in medication list, add more quantity
@@ -107,46 +104,39 @@ public class DataController {
             MedicationList.add(newMED);
             return newMED;
             }
-        }
         catch (Exception e){
             return new Medication();
         }
     }
 //Get medication from API
-    String fromAPI(String GTIN){
-        String a = "AAA";
-        try{
-            //Find information from API
-            a = "A";
-            URL apiRequest = new URL("https://ampoule.herokuapp.com/gtin/"+GTIN);
-            a = "BBB";
-            HttpsURLConnection conn = (HttpsURLConnection) apiRequest.openConnection();
-            a = "CCC";
-            conn.setRequestMethod("GET");
-            a = "DDD";
-            conn.connect();
-            a="EEE";
+    Medication fromAPI(String GTIN){
+        String url = "https://ampoule.herokuapp.com/gtin/"+GTIN;
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
-            int responsecode = conn.getResponseCode();
-            if (responsecode != 200){
-                return "responscodeError";
-            }
-            else{
-                //String inline = "";
-                //Scanner scanner = new Scanner(apiRequest.openStream());
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject jsonObj = response.getJSONObject("data");
+                            String name = jsonObj.getString("name");
+                            int strength = Integer.parseInt(jsonObj.getString("strength"));
+                            String units = jsonObj.getString("units");
+                            String type = jsonObj.getString("type");
+                            int quantity = Integer.parseInt(jsonObj.getString("type"));
+                            Medication a = new Medication(name, GTIN, quantity, false, [""], [""]);
+                        } catch (JSONException e) {
 
-                //while (scanner.hasNext()){
-                //    inline += scanner.nextLine();
-                //}
-                //scanner.close();
+                        }
+                    }
+                }, new Response.ErrorListener() {
 
-                //JSONObject data_obj = new JSONObject(inline);
-                return "AAA";
-            }
-        }
-        catch (Exception e){
-            return e.toString();
-        }
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+
+                    }
+                });
+        reqQueue.add(jsonObjectRequest);
+        return med[0];
     }
-
 }
