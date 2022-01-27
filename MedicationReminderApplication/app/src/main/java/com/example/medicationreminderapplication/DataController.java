@@ -123,7 +123,7 @@ public class DataController {
                             String units = jsonObj.getString("units");
                             String type = jsonObj.getString("type");
                             int quantity = Integer.parseInt(jsonObj.getString("type"));
-                            Medication a = new Medication(name, GTIN, quantity, false, [""], [""]);
+                            //Medication a = new Medication(name, GTIN, quantity, false, [""], [""]);
                         } catch (JSONException e) {
 
                         }
@@ -137,6 +137,7 @@ public class DataController {
                     }
                 });
         reqQueue.add(jsonObjectRequest);
-        return med[0];
+        //return med[0];
+        return new Medication();
     }
 }
