@@ -23,16 +23,17 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class DataController {
 
-    private RequestQueue reqQueue;
+    private static RequestQueue reqQueue;
     private LocalTime WakeUp;
     private LocalTime Breakfast;
     private LocalTime Lunch;
     private LocalTime Dinner;
     private LocalTime Bedtime;
-    List<Medication> MedicationList;
+    private static final DataController instance = getInstance(getFilesDir(), Volley.newRequestQueue());
+    static List<Medication> MedicationList;
 
 //Creates an instance of the Data controller and starts data reading
-    public DataController(File fileDirectory, RequestQueue requestQueue){
+    public static DataController getInstance(File fileDirectory, RequestQueue requestQueue){
         //Instantiate Medication list
         MedicationList = new ArrayList<Medication>();
         //Instantiate request queue
@@ -41,7 +42,7 @@ public class DataController {
         CollectData(fileDirectory);
     }
 //Reads Data from the file and decrypts it
-    void CollectData(File directory){
+    static void CollectData(File directory){
         //Open File
         File opened = new File(directory, "medInfo");
         //Read line in file

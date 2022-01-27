@@ -1,11 +1,17 @@
 package com.example.medicationreminderapplication;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
+import com.budiyev.android.codescanner.DecodeCallback;
+
 
 public class Scanner extends AppCompatActivity {
     private CodeScanner mCodeScanner;
@@ -17,11 +23,14 @@ public class Scanner extends AppCompatActivity {
         mCodeScanner = new CodeScanner(this, scannerView);
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
             @Override
-            public void onDecoded(@NonNull final Result result) {
+            public void onDecoded(@NonNull com.google.zxing.Result result) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(MainActivity.this, result.getText(), Toast.LENGTH_SHORT).show();
+                        // TODO:: Call add new medication
+                        // TODO:: Return to original page
+                        Intent intent = new Intent(Scanner.this, mainPage.class);
+                        startActivity(intent);
                     }
                 });
             }
@@ -45,5 +54,5 @@ public class Scanner extends AppCompatActivity {
         mCodeScanner.releaseResources();
         super.onPause();
     }
-    }
+
 }
