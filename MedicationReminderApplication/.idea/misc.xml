@@ -3,6 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Desktop/Project/Project/MedicationReminderApplication/app/src/main/res/layout/activity_main.xml" value="0.12360688956433637" />
+        <entry key="..\:/Desktop/Project/Project/MedicationReminderApplication/app/src/main/res/layout/activity_main_page.xml" value="0.264" />
+        <entry key="..\:/Desktop/Project/Project/MedicationReminderApplication/app/src/main/res/layout/activity_scanner.xml" value="0.4" />
+        <entry key="..\:/Desktop/Project/Project/MedicationReminderApplication/app/src/main/res/layout/new_medication_popup_window.xml" value="0.2" />
+        <entry key="..\:/Desktop/Project/Project/MedicationReminderApplication/app/src/main/res/layout/popup.xml" value="0.6" />
         <entry key="..\:/Users/Computing/Documents/GitHub/Project/MedicationReminderApplication/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Computing/Documents/GitHub/Project/MedicationReminderApplication/app/src/main/res/layout/activity_main_page.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Computing/Documents/GitHub/Project/MedicationReminderApplication/app/src/main/res/layout/activity_scanner.xml" value="0.35260416666666666" />

@@ -1,11 +1,14 @@
 package com.example.medicationreminderapplication;
+import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -16,7 +19,9 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
-
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 
 import javax.net.ssl.HttpsURLConnection;
@@ -29,15 +34,27 @@ public class DataController {
     private LocalTime Lunch;
     private LocalTime Dinner;
     private LocalTime Bedtime;
-    private static final DataController instance = getInstance(getFilesDir(), Volley.newRequestQueue());
-    static List<Medication> MedicationList;
+    private static DataController instance = null;
+    static ArrayList<Medication> MedicationList;
 
 //Creates an instance of the Data controller and starts data reading
     public static DataController getInstance(File fileDirectory, RequestQueue requestQueue){
+        if (instance == null){
+            instance = new DataController(fileDirectory,requestQueue);
+        }
+        return instance;
+    }
+
+    public static DataController getInstance() {
+        return instance;
+    }
+
+    private DataController(File fileDirectory, RequestQueue requestQueue){
         //Instantiate Medication list
         MedicationList = new ArrayList<Medication>();
         //Instantiate request queue
         reqQueue = requestQueue;
+        reqQueue.start();
         //Collect Data
         CollectData(fileDirectory);
     }
@@ -90,9 +107,9 @@ public class DataController {
         //close file
     }
 //Adds new medications
-    Medication newMed(String GTIN){
+    void newMed(String GTIN){
         try{
-            Medication a = fromAPI(GTIN);
+        //JSONObject information = fromAPI(GTIN);
             //Check if GTIN is already in the medication list
             for (int index = 0; index < MedicationList.size(); index++){
                 //If already in medication list, add more quantity
@@ -101,32 +118,26 @@ public class DataController {
                 }
             }
             //If not in medication list add new medication
-            Medication newMED = new Medication();
-            MedicationList.add(newMED);
-            return newMED;
+            //Medication newMed = new Medication(information.get(0),GTIN, information.get(1)+information.get(2), Integer.parseInt(information.get(4)), information.get(3));
+            //MedicationList.add(newMed);
             }
         catch (Exception e){
-            return new Medication();
         }
     }
-//Get medication from API
-    Medication fromAPI(String GTIN){
-        String url = "https://ampoule.herokuapp.com/gtin/"+GTIN;
+//Get medication information from API
+    void fromAPI(String GTIN, final VolleyCallBack callBack){
+        String url = "https://ampoule.herokuapp.com/gtin/"+GTIN; //URL for the API
+        //Request for the API
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(JSONObject response) { //When the API responds
                         try {
-                            JSONObject jsonObj = response.getJSONObject("data");
-                            String name = jsonObj.getString("name");
-                            int strength = Integer.parseInt(jsonObj.getString("strength"));
-                            String units = jsonObj.getString("units");
-                            String type = jsonObj.getString("type");
-                            int quantity = Integer.parseInt(jsonObj.getString("type"));
-                            //Medication a = new Medication(name, GTIN, quantity, false, [""], [""]);
+                            JSONObject jsonObj = response.getJSONObject("data"); //Retrieve data
+                            callBack.onSuccess(jsonObj); //Send data
                         } catch (JSONException e) {
-
+                            callBack.onFail(); //If no medication
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -137,8 +148,10 @@ public class DataController {
 
                     }
                 });
-        reqQueue.add(jsonObjectRequest);
-        //return med[0];
-        return new Medication();
+        reqQueue.add(jsonObjectRequest); // Add request to the request queue
+    }
+//Get All Current Medications
+    List<Medication> medications(){
+        return MedicationList;
     }
 }
