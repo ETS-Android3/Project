@@ -2,6 +2,7 @@ package com.example.medicationreminderapplication;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.tabs.TabLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -97,6 +99,9 @@ public class mainPage extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+        TabLayout tabLayout = addNewMedsView.findViewById(R.id.tab_layout);
+        ViewPager viewPager = addNewMedsView.findViewById(R.id.pager);
+        tabLayout.setupWithViewPager(viewPager);
         dialogBuilder.setView(addNewMedsView);
         dialog = dialogBuilder.create();
         dialog.show();
