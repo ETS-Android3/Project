@@ -12,14 +12,14 @@ public class Medication {
         List<String> takenAt;
         Map<String, Boolean> prevTakenAt;
 
-        public Medication(String Name, String strength, String GTIN, int NumLeft, String type){
+        public Medication(String Name, String strength, String GTIN, int NumLeft, String type, List<String> TakenAt){
                 name = Name;
                 Strength = strength;
                 this.GTIN = GTIN;
                 Type = type;
                 numLeft = NumLeft;
                 withFood = true;
-                takenAt = new ArrayList<String>();
+                takenAt = TakenAt;
                 prevTakenAt = new HashMap<String, Boolean>();
         }
 

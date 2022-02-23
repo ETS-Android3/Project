@@ -18,8 +18,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.Volley;
@@ -84,7 +87,12 @@ public class mainPage extends AppCompatActivity {
     void OpenNewMedsPopup(){
         dialogBuilder = new AlertDialog.Builder(context);
         final View addNewMedsView = getLayoutInflater().inflate(R.layout.popup, null);
+        EditText name = (EditText) addNewMedsView.findViewById(R.id.editTextName);
+        EditText dosage = (EditText) addNewMedsView.findViewById(R.id.editTextDosage);
+        EditText quantity = (EditText) addNewMedsView.findViewById(R.id.editTextQuantity);
+        Spinner typeDropDown = (Spinner) addNewMedsView.findViewById(R.id.spinnerType);
         ViewPager2 vp = (ViewPager2) addNewMedsView.findViewById(R.id.viewPager2);
+        Button addButton = (Button) addNewMedsView.findViewById(R.id.btnAdd);
         vp.setAdapter(
                 new Adaptery(this)
         );
@@ -108,6 +116,14 @@ public class mainPage extends AppCompatActivity {
                 }).attach();
         dialogBuilder.setView(addNewMedsView);
         dialog = dialogBuilder.create();
+        addButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                
+                dialog.dismiss();
+                return false;
+            }
+        });
         dialog.show();
     }
 

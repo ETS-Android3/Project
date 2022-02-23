@@ -11,12 +11,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MedicationReminderApplication">
-        <activity
-            android:name=".popup2"
-            android:exported="false"
-            android:label="@string/title_activity_popup2"
-            android:theme="@style/Theme.MedicationReminderApplication.NoActionBar" />
+        android:theme="@style/Theme.MedicationReminderApplication.NoActionBar" >
         <activity
             android:name=".Scanner"
             android:exported="true" />
