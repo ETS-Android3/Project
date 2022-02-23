@@ -3,25 +3,18 @@ package com.example.medicationreminderapplication;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.Volley;
@@ -30,9 +23,6 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 
 public class mainPage extends AppCompatActivity {
     public DataController dc;
@@ -156,13 +146,13 @@ public class mainPage extends AppCompatActivity {
         @Override
         public Fragment createFragment(int position) {
             if (position == 0){
-                return new Test1("My Title");
+                return new ByDay();
             }
             else if (position == 1){
-                return new Test2();
+                return new ByWeek();
             }
             else{
-                return new Test2();
+                return new ByMonth();
             }
         }
 
