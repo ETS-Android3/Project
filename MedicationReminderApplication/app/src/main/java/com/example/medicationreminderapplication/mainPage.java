@@ -1,8 +1,11 @@
 package com.example.medicationreminderapplication;
 
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -10,8 +13,10 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -64,7 +69,16 @@ public class mainPage extends AppCompatActivity {
 
     public void onNewMedsClick(View view){
         Intent intent = new Intent(mainPage.this, Scanner.class);
-        startActivity(intent);
+        ActivityResultContracts.RequestPermission permissionRequester = new ActivityResultContracts.RequestPermission();
+        if (ContextCompat.checkSelfPermission(this, CAMERA_SERVICE) !=0){
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    1);
+
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            startActivity(intent);
+        }
     }
 
     void OpenNewMedsPopup(){
@@ -127,6 +141,7 @@ public class mainPage extends AppCompatActivity {
         dialog = dialogBuilder.create();
         dialog.show();
     }
+
 
     class Adaptery extends FragmentStateAdapter {
 
