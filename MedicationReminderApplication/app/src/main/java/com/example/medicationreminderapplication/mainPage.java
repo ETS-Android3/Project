@@ -14,6 +14,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -72,8 +73,7 @@ public class mainPage extends AppCompatActivity {
 
     public void onNewMedsClick(View view){
         Intent intent = new Intent(mainPage.this, Scanner.class);
-        ActivityResultContracts.RequestPermission permissionRequester = new ActivityResultContracts.RequestPermission();
-        if (ContextCompat.checkSelfPermission(this, CAMERA_SERVICE) !=0){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.CAMERA},
                     1);
@@ -84,6 +84,7 @@ public class mainPage extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     void OpenNewMedsPopup(){
         dialogBuilder = new AlertDialog.Builder(context);
         final View addNewMedsView = getLayoutInflater().inflate(R.layout.popup, null);
@@ -119,7 +120,7 @@ public class mainPage extends AppCompatActivity {
         addButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                
+
                 dialog.dismiss();
                 return false;
             }
