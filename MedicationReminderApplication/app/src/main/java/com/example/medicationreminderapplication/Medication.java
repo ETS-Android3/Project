@@ -20,16 +20,15 @@ public abstract class Medication {
             withFood = WithFood;
             prevTakenAt = PrevTakenAt;
         }
-    protected Medication(String Name, String strength, String GTIN, int NumLeft, String type, Boolean WithFood){
-        name = Name;
-        Strength = strength;
-        this.GTIN = GTIN;
-        Type = type;
-        numLeft = NumLeft;
-        withFood = WithFood;
-        prevTakenAt = new HashMap<String, Boolean>();
-    }
-
-
+        protected Medication(String Name, String strength, String GTIN, int NumLeft, String type, Boolean WithFood){
+            name = Name;
+            Strength = strength;
+            this.GTIN = GTIN;
+            Type = type;
+            numLeft = NumLeft;
+            withFood = WithFood;
+            prevTakenAt = new HashMap<String, Boolean>();
+        }
 }
+
 
