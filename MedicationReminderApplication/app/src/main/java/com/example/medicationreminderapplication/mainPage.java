@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.Volley;
@@ -88,9 +89,9 @@ public class mainPage extends AppCompatActivity {
     void OpenNewMedsPopup(){
         dialogBuilder = new AlertDialog.Builder(context);
         final View addNewMedsView = getLayoutInflater().inflate(R.layout.popup, null);
-        EditText name = (EditText) addNewMedsView.findViewById(R.id.editTextName);
-        EditText dosage = (EditText) addNewMedsView.findViewById(R.id.editTextDosage);
-        EditText quantity = (EditText) addNewMedsView.findViewById(R.id.editTextQuantity);
+        EditText nameText = (EditText) addNewMedsView.findViewById(R.id.editTextName);
+        EditText dosageText = (EditText) addNewMedsView.findViewById(R.id.editTextDosage);
+        EditText quantityText = (EditText) addNewMedsView.findViewById(R.id.editTextQuantity);
         Spinner typeDropDown = (Spinner) addNewMedsView.findViewById(R.id.spinnerType);
         ViewPager2 vp = (ViewPager2) addNewMedsView.findViewById(R.id.viewPager2);
         Button addButton = (Button) addNewMedsView.findViewById(R.id.btnAdd);
@@ -120,8 +121,21 @@ public class mainPage extends AppCompatActivity {
         addButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                Boolean allFull = Boolean.TRUE;
+                String name = nameText.toString();
+                String dosage = dosageText.toString();
+                int quantity = Integer.parseInt(quantityText.toString());
+                String type = typeDropDown.getTransitionName();
+                switch (tabLayout.getSelectedTabPosition()){
+                    case 0:{
+                        Switch byDays = (Switch)vp.findViewById(R.id.switchByXDays);
 
-                dialog.dismiss();
+                    }
+                    case 1:{
+
+                    }
+                }
+                if (allFull) { dialog.dismiss();}
                 return false;
             }
         });

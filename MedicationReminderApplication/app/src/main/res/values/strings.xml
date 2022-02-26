@@ -5,6 +5,15 @@
         <item>By Week</item>
         <item>By Month</item>
     </string-array>
+    <string-array name="DaysOfTheWeek">
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
+    </string-array>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
