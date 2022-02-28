@@ -14,6 +14,10 @@
         <item>Saturday</item>
         <item>Sunday</item>
     </string-array>
+    <string-array name="TypesOfMedications">
+        <item>Tablet</item>
+        <item>Liquid</item>
+    </string-array>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 

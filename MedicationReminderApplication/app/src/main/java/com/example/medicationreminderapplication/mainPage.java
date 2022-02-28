@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -126,10 +127,10 @@ public class mainPage extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 Boolean allFull = Boolean.TRUE;
-                String name = nameText.toString();
-                String dosage = dosageText.toString();
-                int quantity = Integer.parseInt(quantityText.toString());
-                String type = typeDropDown.getTransitionName();
+                String name = nameText.getText().toString();
+                String dosage = dosageText.getText().toString();
+                int quantity = Integer.parseInt(quantityText.getText().toString());
+                String type = typeDropDown.getSelectedItem().toString();
                 switch (tabLayout.getSelectedTabPosition()){
                     case 0:{
                         Switch byDays = (Switch)vp.findViewById(R.id.switchByXDays);
@@ -146,7 +147,7 @@ public class mainPage extends AppCompatActivity {
                     }
                     case 1:{
                         Spinner days = (Spinner) vp.findViewById(R.id.spinnerDayOfWeek);
-                        String day = days.getTransitionName();
+                        String day = days.getSelectedItem().toString();
                         RecyclerView timeRV = (RecyclerView)  vp.findViewById(R.id.recyclerByWeekTimes);
                         RecyclerViewAdapter timeRVA = (RecyclerViewAdapter)timeRV.getAdapter();
                         ArrayList<LocalTime> times = timeRVA.mTimes;
