@@ -70,16 +70,18 @@ public class DataController {
         //Add Medication to list
     }
 //Checks for which medications are meant to be taken in the next 'x' days
+/*
     HashMap<Date, ArrayList<Medication>> NextMeds(int days){
         //Get current time
         Date curr = Calendar.getInstance().getTime();
         LocalDateTime current = LocalDateTime.now();
         //Get time in 24 hours
         //Check Daily Medications
+
         HashMap<Date, ArrayList<Medication>> nextMeds = new HashMap<Date, ArrayList<Medication>>();
         for (int i = 0; i < MedicationList.size(); i++){
             Medication currentMed = MedicationList.get(i);
-            for (int j = 0; j < currentMed.takenAt.size(); j++) {
+            for (int j = 0; j < currentMed..size(); j++) {
                 switch (currentMed.takenAt.get(j)) {
                     case "WakeUp":
 
@@ -96,7 +98,7 @@ public class DataController {
             }
         }
         return nextMeds;
-    }
+    }*/
 //Write Back To File
     public void writeToFile(){
         //Open File / Create File
