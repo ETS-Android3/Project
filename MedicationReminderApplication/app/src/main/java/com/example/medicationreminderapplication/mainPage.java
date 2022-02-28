@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -33,6 +34,9 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.time.LocalTime;
+import java.util.ArrayList;
 
 public class mainPage extends AppCompatActivity {
     public DataController dc;
@@ -129,11 +133,32 @@ public class mainPage extends AppCompatActivity {
                 switch (tabLayout.getSelectedTabPosition()){
                     case 0:{
                         Switch byDays = (Switch)vp.findViewById(R.id.switchByXDays);
+                        if (byDays.isChecked()){
+                            //TODO:: Get days
+                            //TODO:: Get times
+                            //TODO:: Add data to data controller
+                        }
+                        else{
+                            //TODO::
+                        }
+
 
                     }
                     case 1:{
-
+                        Spinner days = (Spinner) vp.findViewById(R.id.spinnerDayOfWeek);
+                        String day = days.getTransitionName();
+                        RecyclerView timeRV = (RecyclerView)  vp.findViewById(R.id.recyclerByWeekTimes);
+                        RecyclerViewAdapter timeRVA = (RecyclerViewAdapter)timeRV.getAdapter();
+                        ArrayList<LocalTime> times = timeRVA.mTimes;
+                        Toast.makeText(context, String.join(" ", name, dosage, String.valueOf(quantity), type, day, times.toString()), Toast.LENGTH_SHORT).show();
+                        //TODO:: Convert data into a medication
                     }
+                    case 2:{
+                        //TODO:: Get date of month
+                        //TODO:: Get times of day
+                        //TODO:: Add data to data controller
+                    }
+
                 }
                 if (allFull) { dialog.dismiss();}
                 return false;
