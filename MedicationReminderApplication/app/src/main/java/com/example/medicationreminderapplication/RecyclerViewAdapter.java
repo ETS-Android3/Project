@@ -60,7 +60,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 Log.e("TextChanged", String.valueOf(position));
                 try{
                     mTimes.set(position, LocalTime.parse(s));
-                    adapter.notifyItemChanged(position);
                 }
                 catch (Exception e){
 

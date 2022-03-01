@@ -7,12 +7,12 @@ import java.util.Map;
 
 public class EveryXDaysMedication extends DayMedication {
     int numberOfDays;
-    public EveryXDaysMedication(String Name, String strength, String GTIN, int NumLeft, String type, Boolean WithFood, ArrayList<LocalTime> TakenAt, int numOfDays , Map<String, Boolean> PrevTakenAt) {
-        super(Name, strength, GTIN, NumLeft, type, WithFood, TakenAt, PrevTakenAt);
+    public EveryXDaysMedication(String Name, String strength,int NumLeft, String type, Boolean WithFood, ArrayList<LocalTime> TakenAt, int numOfDays , Map<String, Boolean> PrevTakenAt) {
+        super(Name, strength, NumLeft, type, WithFood, TakenAt, PrevTakenAt);
         numberOfDays = numOfDays;
     }
-    public EveryXDaysMedication(String Name, String strength, String GTIN, int NumLeft, String type, Boolean WithFood, ArrayList<LocalTime> TakenAt, int numOfDays) {
-        super(Name, strength, GTIN, NumLeft, type, WithFood, TakenAt);
+    public EveryXDaysMedication(String Name, String strength, int NumLeft, String type, Boolean WithFood, ArrayList<LocalTime> TakenAt, int numOfDays) {
+        super(Name, strength, NumLeft, type, WithFood, TakenAt);
         numberOfDays = numOfDays;
     }
 }

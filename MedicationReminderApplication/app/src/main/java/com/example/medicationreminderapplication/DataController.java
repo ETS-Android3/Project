@@ -109,22 +109,8 @@ public class DataController {
         //close file
     }
 //Adds new medications
-    void newMed(String GTIN){
-        try{
-        //JSONObject information = fromAPI(GTIN);
-            //Check if GTIN is already in the medication list
-            for (int index = 0; index < MedicationList.size(); index++){
-                //If already in medication list, add more quantity
-                if (MedicationList.get(index).GTIN == GTIN){
-                    MedicationList.get(index).numLeft += 5;
-                }
-            }
-            //If not in medication list add new medication
-            //Medication newMed = new Medication(information.get(0),GTIN, information.get(1)+information.get(2), Integer.parseInt(information.get(4)), information.get(3));
-            //MedicationList.add(newMed);
-            }
-        catch (Exception e){
-        }
+    void newMed(Medication med){
+        MedicationList.add(med);
     }
 //Get medication information from API
     void fromAPI(String GTIN, final VolleyCallBack callBack){

@@ -126,6 +126,7 @@ public class mainPage extends AppCompatActivity {
         addButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                Medication newMed;
                 Boolean allFull = Boolean.TRUE;
                 String name = nameText.getText().toString();
                 String dosage = dosageText.getText().toString();
@@ -146,13 +147,17 @@ public class mainPage extends AppCompatActivity {
 
                     }
                     case 1:{
-                        Spinner days = (Spinner) vp.findViewById(R.id.spinnerDayOfWeek);
-                        String day = days.getSelectedItem().toString();
+                        Spinner daysSpinner = (Spinner) vp.findViewById(R.id.spinnerDayOfWeek);
+                        String day = daysSpinner.getSelectedItem().toString();
                         RecyclerView timeRV = (RecyclerView)  vp.findViewById(R.id.recyclerByWeekTimes);
                         RecyclerViewAdapter timeRVA = (RecyclerViewAdapter)timeRV.getAdapter();
                         ArrayList<LocalTime> times = timeRVA.mTimes;
                         Toast.makeText(context, String.join(" ", name, dosage, String.valueOf(quantity), type, day, times.toString()), Toast.LENGTH_SHORT).show();
                         //TODO:: Convert data into a medication
+                        ArrayList<String> days = new ArrayList<>();
+                        days.add(day);
+                        newMed = new SpecificDayMedication(name, dosage, quantity, type, Boolean.TRUE, times, days);
+                        dc.newMed(newMed);
                     }
                     case 2:{
                         //TODO:: Get date of month
@@ -168,34 +173,107 @@ public class mainPage extends AppCompatActivity {
         dialog.show();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     void OpenNewMedsPopup(JSONObject information){
-        dialogBuilder = new AlertDialog.Builder(context);
         final View addNewMedsView = getLayoutInflater().inflate(R.layout.popup, null);
-        EditText name = (EditText) addNewMedsView.findViewById(R.id.editTextName);
-        EditText dosage = (EditText) addNewMedsView.findViewById(R.id.editTextDosage);
-        EditText quantity = (EditText) addNewMedsView.findViewById(R.id.editTextQuantity);
+        dialogBuilder = new AlertDialog.Builder(context);
+        EditText nameText = (EditText) addNewMedsView.findViewById(R.id.editTextName);
+        EditText dosageText = (EditText) addNewMedsView.findViewById(R.id.editTextDosage);
+        EditText quantityText = (EditText) addNewMedsView.findViewById(R.id.editTextQuantity);
+        Spinner typeDropDown = (Spinner) addNewMedsView.findViewById(R.id.spinnerType);
+        ViewPager2 vp = (ViewPager2) addNewMedsView.findViewById(R.id.viewPager2);
+        Button addButton = (Button) addNewMedsView.findViewById(R.id.btnAdd);
         if (information.toString() != "null"){
             try{
-                name.setText(information.getString("name"));
-                name.setEnabled(false);
+                nameText.setText(information.getString("name"));
+                nameText.setEnabled(false);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
             try {
-                dosage.setText(information.getString("strength").concat(information.getString("units")));
-                dosage.setEnabled(false);
+                dosageText.setText(information.getString("strength").concat(information.getString("units")));
+                dosageText.setEnabled(false);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
             try {
-                quantity.setText(information.getString("quantity"));
-                quantity.setEnabled(false);
+                quantityText.setText(information.getString("quantity"));
+                quantityText.setEnabled(false);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+        vp.setAdapter(
+                new Adaptery(this)
+        );
+        TabLayout tabLayout = (TabLayout) addNewMedsView.findViewById(R.id.tabs);
+        new TabLayoutMediator(
+                tabLayout,
+                vp,
+                new TabLayoutMediator.TabConfigurationStrategy() {
+                    @Override
+                    public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                        if (position == 0){
+                            tab.setText("By Day");
+                        }
+                        else if (position == 1){
+                            tab.setText("By Week");
+                        }
+                        else{
+                            tab.setText("By Month");
+                        }
+                    }
+                }).attach();
+
         dialogBuilder.setView(addNewMedsView);
         dialog = dialogBuilder.create();
+        addButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Medication newMed;
+                Boolean allFull = Boolean.TRUE;
+                String name = nameText.getText().toString();
+                String dosage = dosageText.getText().toString();
+                int quantity = Integer.parseInt(quantityText.getText().toString());
+                String type = typeDropDown.getSelectedItem().toString();
+                switch (tabLayout.getSelectedTabPosition()){
+                    case 0:{
+                        Switch byDays = (Switch)vp.findViewById(R.id.switchByXDays);
+                        if (byDays.isChecked()){
+                            //TODO:: Get days
+                            //TODO:: Get times
+                            //TODO:: Add data to data controller
+                        }
+                        else{
+                            //TODO::
+                        }
+
+
+                    }
+                    case 1:{
+                        Spinner daysSpinner = (Spinner) vp.findViewById(R.id.spinnerDayOfWeek);
+                        String day = daysSpinner.getSelectedItem().toString();
+                        RecyclerView timeRV = (RecyclerView)  vp.findViewById(R.id.recyclerByWeekTimes);
+                        RecyclerViewAdapter timeRVA = (RecyclerViewAdapter)timeRV.getAdapter();
+                        ArrayList<LocalTime> times = timeRVA.mTimes;
+                        Toast.makeText(context, String.join(" ", name, dosage, String.valueOf(quantity), type, day, times.toString()), Toast.LENGTH_SHORT).show();
+                        //TODO:: Convert data into a medication
+                        ArrayList<String> days = new ArrayList<>();
+                        days.add(day);
+                        newMed = new SpecificDayMedication(name, dosage, quantity, type, Boolean.TRUE, times, days);
+                        dc.newMed(newMed);
+                    }
+                    case 2:{
+                        //TODO:: Get date of month
+                        //TODO:: Get times of day
+                        //TODO:: Add data to data controller
+                    }
+
+                }
+                if (allFull) { dialog.dismiss();}
+                return false;
+            }
+        });
         dialog.show();
     }
 
