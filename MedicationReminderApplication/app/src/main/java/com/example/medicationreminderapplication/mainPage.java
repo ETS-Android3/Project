@@ -18,15 +18,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.pm.PermissionGroupInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.Volley;
@@ -95,6 +92,7 @@ public class mainPage extends AppCompatActivity {
         startActivity(intent);
     }
 
+//Open New med popup without pre-submitting information
     @SuppressLint("ClickableViewAccessibility")
     void OpenNewMedsPopup(){
         dialogBuilder = new AlertDialog.Builder(context);
@@ -103,10 +101,10 @@ public class mainPage extends AppCompatActivity {
         EditText dosageText = (EditText) addNewMedsView.findViewById(R.id.editTextDosage);
         EditText quantityText = (EditText) addNewMedsView.findViewById(R.id.editTextQuantity);
         Spinner typeDropDown = (Spinner) addNewMedsView.findViewById(R.id.spinnerType);
-        ViewPager2 vp = (ViewPager2) addNewMedsView.findViewById(R.id.viewPager2);
+        ViewPager2 vp = (ViewPager2) addNewMedsView.findViewById(R.id.viewPagerByDays);
         Button addButton = (Button) addNewMedsView.findViewById(R.id.btnAdd);
         vp.setAdapter(
-                new Adaptery(this)
+                new AdapterByWhich(this)
         );
         TabLayout tabLayout = (TabLayout) addNewMedsView.findViewById(R.id.tabs);
         new TabLayoutMediator(
@@ -139,14 +137,20 @@ public class mainPage extends AppCompatActivity {
                 String type = typeDropDown.getSelectedItem().toString();
                 switch (tabLayout.getSelectedTabPosition()){
                     case 0:{
-                        Switch byDays = (Switch)vp.findViewById(R.id.switchByXDays);
-                        if (byDays.isChecked()){
-                            //TODO:: Get days
-                            //TODO:: Get times
-                            //TODO:: Add data to data controller
-                        }
-                        else{
-                            //TODO::
+                        ViewPager2 byXDays = (ViewPager2) vp.findViewById(R.id.viewPagerByDays);
+                        TabLayout byDaysTabs = (TabLayout) vp.findViewById(R.id.tabsDays);
+                        switch (byDaysTabs.getSelectedTabPosition()){
+                            case 0:{
+                                //TODO:: Get days
+                                //TODO:: Get times
+                                //TODO:: Add data to data controller
+                                break;
+                            }
+                            case 1:{
+                                //TODO:: Get days
+                                //TODO:: Get times
+                                //TODO:: Add data to data controller
+                            }
                         }
                         break;
                     }
@@ -186,7 +190,7 @@ public class mainPage extends AppCompatActivity {
         EditText dosageText = (EditText) addNewMedsView.findViewById(R.id.editTextDosage);
         EditText quantityText = (EditText) addNewMedsView.findViewById(R.id.editTextQuantity);
         Spinner typeDropDown = (Spinner) addNewMedsView.findViewById(R.id.spinnerType);
-        ViewPager2 vp = (ViewPager2) addNewMedsView.findViewById(R.id.viewPager2);
+        ViewPager2 vp = (ViewPager2) addNewMedsView.findViewById(R.id.viewPagerByDays);
         Button addButton = (Button) addNewMedsView.findViewById(R.id.btnAdd);
         if (information.toString() != "null"){
             try{
@@ -209,7 +213,7 @@ public class mainPage extends AppCompatActivity {
             }
         }
         vp.setAdapter(
-                new Adaptery(this)
+                new AdapterByWhich(this)
         );
         TabLayout tabLayout = (TabLayout) addNewMedsView.findViewById(R.id.tabs);
         new TabLayoutMediator(
@@ -243,16 +247,7 @@ public class mainPage extends AppCompatActivity {
                 String type = typeDropDown.getSelectedItem().toString();
                 switch (tabLayout.getSelectedTabPosition()){
                     case 0:{
-                        Switch byDays = (Switch)vp.findViewById(R.id.switchByXDays);
-                        if (byDays.isChecked()){
-                            //TODO:: Get days
-                            //TODO:: Get times
-                            //TODO:: Add data to data controller
-                        }
-                        else{
-                            //TODO::
-                        }
-                        break;
+
                     }
                     case 1:{
                         Spinner daysSpinner = (Spinner) vp.findViewById(R.id.spinnerDayOfWeek);
@@ -284,17 +279,17 @@ public class mainPage extends AppCompatActivity {
     }
 
 
-    class Adaptery extends FragmentStateAdapter {
+    class AdapterByWhich extends FragmentStateAdapter {
 
-        public Adaptery(@NonNull FragmentActivity fragmentActivity) {
+        public AdapterByWhich(@NonNull FragmentActivity fragmentActivity) {
             super(fragmentActivity);
         }
 
-        public Adaptery(@NonNull Fragment fragment) {
+        public AdapterByWhich(@NonNull Fragment fragment) {
             super(fragment);
         }
 
-        public Adaptery(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+        public AdapterByWhich(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
             super(fragmentManager, lifecycle);
         }
 
@@ -317,4 +312,6 @@ public class mainPage extends AppCompatActivity {
             return 3;
         }
     }
+
+
 }

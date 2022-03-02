@@ -21,7 +21,9 @@
         <entry key="..\:/Users/Computing/Documents/GitHub/MedicationReminderApplication/app/src/main/res/layout/activity_medication_list.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Computing/Documents/GitHub/MedicationReminderApplication/app/src/main/res/layout/fragment_by_day.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Computing/Documents/GitHub/MedicationReminderApplication/app/src/main/res/layout/fragment_by_month.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Computing/Documents/GitHub/MedicationReminderApplication/app/src/main/res/layout/fragment_by_specific_day.xml" value="0.340625" />
         <entry key="..\:/Users/Computing/Documents/GitHub/MedicationReminderApplication/app/src/main/res/layout/fragment_by_week.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Computing/Documents/GitHub/MedicationReminderApplication/app/src/main/res/layout/fragment_by_x_days.xml" value="0.340625" />
         <entry key="..\:/Users/Computing/Documents/GitHub/MedicationReminderApplication/app/src/main/res/layout/layout_recycler_medications.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Computing/Documents/GitHub/MedicationReminderApplication/app/src/main/res/layout/layout_recycler_times_of_day.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Computing/Documents/GitHub/MedicationReminderApplication/app/src/main/res/layout/popup.xml" value="0.36666666666666664" />
