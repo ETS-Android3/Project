@@ -30,9 +30,10 @@ public class ByDay extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_by_day, container, false);
         ViewPager2 viewPagerByDay = (ViewPager2) root.findViewById(R.id.viewPagerByDays);
-        viewPagerByDay.setAdapter(new AdapterByDay(this));
-        TabLayout tabLayout = (TabLayout) root.findViewById(R.id.tabsDays);
-        new TabLayoutMediator(tabLayout, viewPagerByDay, new TabLayoutMediator.TabConfigurationStrategy() {
+        viewPagerByDay.setAdapter(new AdapterByDay(this.getActivity()));
+        TabLayout tabLayout1 = (TabLayout) root.findViewById(R.id.tabsDays);
+
+        new TabLayoutMediator(tabLayout1, viewPagerByDay, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
                 if (position == 0){
@@ -67,13 +68,13 @@ public class ByDay extends Fragment {
                 return new ByXDays();
             }
             else {
-                return new ByXDays();
+                return new BySpecificDay();
             }
         }
 
         @Override
         public int getItemCount() {
-            return 0;
+            return 2;
         }
     }
 }
