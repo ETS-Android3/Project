@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PermissionGroupInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -147,8 +148,7 @@ public class mainPage extends AppCompatActivity {
                         else{
                             //TODO::
                         }
-
-
+                        break;
                     }
                     case 1:{
                         Spinner daysSpinner = (Spinner) vp.findViewById(R.id.spinnerDayOfWeek);
@@ -160,12 +160,14 @@ public class mainPage extends AppCompatActivity {
                         days.add(day);
                         newMed = new SpecificDayMedication(name, dosage, quantity, type, Boolean.TRUE, times, days);
                         dc.newMed(newMed);
+                        break;
                     }
                     case 2:{
                         EditText monthText = (EditText) vp.findViewById(R.id.editTextDayOfMonth);
                         int month = Integer.parseInt(monthText.getText().toString());
                         newMed = new MonthlyMedication(name, dosage, quantity, type, Boolean.TRUE, month);
                         dc.newMed(newMed);
+                        break;
                     }
 
                 }
@@ -250,8 +252,7 @@ public class mainPage extends AppCompatActivity {
                         else{
                             //TODO::
                         }
-
-
+                        break;
                     }
                     case 1:{
                         Spinner daysSpinner = (Spinner) vp.findViewById(R.id.spinnerDayOfWeek);
@@ -260,16 +261,18 @@ public class mainPage extends AppCompatActivity {
                         RecyclerViewAdapter timeRVA = (RecyclerViewAdapter)timeRV.getAdapter();
                         ArrayList<LocalTime> times = timeRVA.mTimes;
                         Toast.makeText(context, String.join(" ", name, dosage, String.valueOf(quantity), type, day, times.toString()), Toast.LENGTH_SHORT).show();
-                        //TODO:: Convert data into a medication
                         ArrayList<String> days = new ArrayList<>();
                         days.add(day);
                         newMed = new SpecificDayMedication(name, dosage, quantity, type, Boolean.TRUE, times, days);
                         dc.newMed(newMed);
+                        break;
                     }
                     case 2:{
-                        //TODO:: Get date of month
-                        //TODO:: Get times of day
-                        //TODO:: Add data to data controller
+                        EditText monthText = (EditText) vp.findViewById(R.id.editTextDayOfMonth);
+                        int month = Integer.parseInt(monthText.getText().toString());
+                        newMed = new MonthlyMedication(name, dosage, quantity, type, Boolean.TRUE, month);
+                        dc.newMed(newMed);
+                        break;
                     }
 
                 }

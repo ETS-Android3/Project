@@ -27,20 +27,6 @@ public class ByMonth extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_by_month, container, false);
-        RecyclerView recyclerView = root.findViewById(R.id.recyclerByWeekTimes);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(getContext(), new ArrayList<LocalTime>());
-
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        FloatingActionButton addButton = root.findViewById(R.id.btnAddTime);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                adapter.mTimes.add(LocalTime.MIN);
-                adapter.notifyDataSetChanged();
-                Log.d("String", adapter.mTimes.toString());
-            }
-        });
         return root;
     }
 }
