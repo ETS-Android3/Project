@@ -2,20 +2,19 @@ package com.example.medicationreminderapplication;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Lifecycle;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
-import androidx.viewpager2.widget.ViewPager2;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.time.LocalTime;
+import java.util.ArrayList;
 
 
 public class ByXDays extends Fragment {
@@ -29,7 +28,20 @@ public class ByXDays extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_by_x_days, container, false);
+        RecyclerView recyclerView = root.findViewById(R.id.recyclerByWeekTimes);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(getContext(), new ArrayList<LocalTime>());
 
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        FloatingActionButton addButton = root.findViewById(R.id.btnAddTime2);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                adapter.mTimes.add(LocalTime.MIN);
+                adapter.notifyDataSetChanged();
+                Log.d("String", adapter.mTimes.toString());
+            }
+        });
         return root;
     }
 
