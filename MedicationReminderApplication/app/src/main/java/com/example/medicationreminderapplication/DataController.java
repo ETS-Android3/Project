@@ -139,7 +139,7 @@ public class DataController {
         reqQueue.add(jsonObjectRequest); // Add request to the request queue
     }
 //Get All Current Medications
-    List<Medication> medications(){
+    ArrayList<Medication> medications(){
         return MedicationList;
     }
 }

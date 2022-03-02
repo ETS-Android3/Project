@@ -90,6 +90,11 @@ public class mainPage extends AppCompatActivity {
         }
     }
 
+    public void onMedsListClick(View view){
+        Intent intent = new Intent(mainPage.this, Medication_list.class);
+        startActivity(intent);
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     void OpenNewMedsPopup(){
         dialogBuilder = new AlertDialog.Builder(context);
@@ -152,17 +157,16 @@ public class mainPage extends AppCompatActivity {
                         RecyclerView timeRV = (RecyclerView)  vp.findViewById(R.id.recyclerByWeekTimes);
                         RecyclerViewAdapter timeRVA = (RecyclerViewAdapter)timeRV.getAdapter();
                         ArrayList<LocalTime> times = timeRVA.mTimes;
-                        Toast.makeText(context, String.join(" ", name, dosage, String.valueOf(quantity), type, day, times.toString()), Toast.LENGTH_SHORT).show();
-                        //TODO:: Convert data into a medication
                         ArrayList<String> days = new ArrayList<>();
                         days.add(day);
                         newMed = new SpecificDayMedication(name, dosage, quantity, type, Boolean.TRUE, times, days);
                         dc.newMed(newMed);
                     }
                     case 2:{
-                        //TODO:: Get date of month
-                        //TODO:: Get times of day
-                        //TODO:: Add data to data controller
+                        EditText monthText = (EditText) vp.findViewById(R.id.editTextDayOfMonth);
+                        int month = Integer.parseInt(monthText.getText().toString());
+                        newMed = new MonthlyMedication(name, dosage, quantity, type, Boolean.TRUE, month);
+                        dc.newMed(newMed);
                     }
 
                 }

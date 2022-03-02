@@ -13,9 +13,9 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@id/btnEditMedicaiton"
+        app:layout_constraintBottom_toBottomOf="@id/btnEditMedication"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/btnEditMedicaiton" />
+        app:layout_constraintTop_toTopOf="@id/btnEditMedication" />
 
     <TextView
         android:id="@+id/txtMedicationStrength"
@@ -25,13 +25,13 @@
         android:layout_marginEnd="149dp"
         android:layout_marginBottom="8dp"
         android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@id/btnEditMedicaiton"
-        app:layout_constraintEnd_toStartOf="@+id/btnEditMedicaiton"
+        app:layout_constraintBottom_toBottomOf="@id/btnEditMedication"
+        app:layout_constraintEnd_toStartOf="@+id/btnEditMedication"
         app:layout_constraintStart_toEndOf="@+id/txtMedicationName"
-        app:layout_constraintTop_toTopOf="@id/btnEditMedicaiton" />
+        app:layout_constraintTop_toTopOf="@id/btnEditMedication" />
 
     <ImageButton
-        android:id="@+id/btnEditMedicaiton"
+        android:id="@+id/btnEditMedication"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
