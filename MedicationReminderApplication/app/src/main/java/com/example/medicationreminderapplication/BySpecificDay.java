@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
 public class BySpecificDay extends Fragment {
 
 
@@ -21,7 +23,8 @@ public class BySpecificDay extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_by_specific_day, container, false);
-        RecyclerView bySpecific Days
+        RecyclerView bySpecificDays = root.findViewById(R.id.recyclerBySpecificDay);
+        bySpecificDays.setAdapter(new TimesRecyclerViewAdapter(this.getContext(), new ArrayList<>(), new ArrayList<>()));
         return root;
     }
 }
