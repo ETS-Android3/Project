@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class BySpecificDay extends Fragment {
 
@@ -24,7 +25,13 @@ public class BySpecificDay extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_by_specific_day, container, false);
         RecyclerView bySpecificDays = root.findViewById(R.id.recyclerBySpecificDay);
-        bySpecificDays.setAdapter(new TimesRecyclerViewAdapter(this.getContext(), new ArrayList<>(), new ArrayList<>()));
+        ArrayList<String> days = new ArrayList<>();
+        for (String day:
+             getResources().getStringArray(R.array.DaysOfTheWeek)) {
+                 days.add(day);
+
+        }
+        bySpecificDays.setAdapter(new TimesRecyclerViewAdapter(this.getContext(), new ArrayList<>(), days));
         return root;
     }
 }

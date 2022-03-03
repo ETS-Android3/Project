@@ -49,7 +49,7 @@ public class TimesRecyclerViewAdapter extends RecyclerView.Adapter<TimesRecycler
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         TimesRecyclerViewAdapter adapter = this;
-        holder.timesRecycler.setAdapter(new RecyclerViewAdapter(mContext, mTimes.get(position)));
+        holder.timesRecycler.setAdapter(new RecyclerViewAdapter(mContext,new ArrayList<>()));
         holder.DayButton.setText(mDays.get(position));
     }
 
