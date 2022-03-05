@@ -33,6 +33,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
@@ -146,8 +147,11 @@ public class mainPage extends AppCompatActivity {
                                 //Get times
                                 RecyclerView recycler = byXDays.findViewById(R.id.recyclerByWeekTimes);
                                 RecyclerViewAdapter timeRVA = (RecyclerViewAdapter) recycler.getAdapter();
+
+                                EditText dateText = byXDays.findViewById(R.id.editTextDate);
+                                LocalDate date = LocalDate.parse(dateText.getText().toString());
                                 //Add data to data controller
-                                newMed = new EveryXDaysMedication(name, dosage, quantity, type, Boolean.TRUE, timeRVA.mTimes, numOfDays);
+                                newMed = new EveryXDaysMedication(name, dosage, quantity, type, Boolean.TRUE, timeRVA.mTimes, numOfDays, date);
                                 dc.newMed(newMed);
                                 break;
                             }

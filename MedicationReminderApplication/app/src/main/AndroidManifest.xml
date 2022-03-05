@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MedicationReminderApplication.NoActionBar">
         <activity
+            android:name=".Notification"
+            android:exported="true" />
+        <activity
             android:name=".Medication_list"
             android:exported="false" />
         <activity

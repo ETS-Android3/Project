@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.File;
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
@@ -69,36 +70,53 @@ public class DataController {
         //Create medication obj
         //Add Medication to list
     }
-//Checks for which medications are meant to be taken in the next 'x' days
-/*
-    HashMap<Date, ArrayList<Medication>> NextMeds(int days){
+//Checks for which medications are meant to be taken next
+    HashMap<Date, ArrayList<Medication>> NextMeds(){
         //Get current time
         Date curr = Calendar.getInstance().getTime();
         LocalDateTime current = LocalDateTime.now();
         //Get time in 24 hours
         //Check Daily Medications
+        LocalDateTime nextDateTime = LocalDateTime.MAX;
+        ArrayList<Medication> nextMeds = new ArrayList<>();
+        for (Medication med: MedicationList
+             ) {
+            if (med instanceof EveryXDaysMedication){
+                LocalDate previousDate = ((EveryXDaysMedication) med).startDate;
+                ArrayList<LocalTime> previousTimes = ((EveryXDaysMedication) med).times;
+                for (LocalTime time: previousTimes
+                     ) {
+                    LocalDateTime previousDateTime = previousDate.atTime(time);
+                    while (previousDateTime.isBefore(current)){
+                        previousDateTime = previousDateTime.plusDays(((EveryXDaysMedication) med).numberOfDays);
+                    }
+                    if (nextDateTime.isAfter(previousDateTime)){
+                        nextDateTime = previousDateTime;
+                        nextMeds.clear();
+                        nextMeds.add(med);
+                    }
+                    else if (nextDateTime.isEqual(previousDateTime)){
+                        nextMeds.add(med);
+                    }
+                }
 
-        HashMap<Date, ArrayList<Medication>> nextMeds = new HashMap<Date, ArrayList<Medication>>();
-        for (int i = 0; i < MedicationList.size(); i++){
-            Medication currentMed = MedicationList.get(i);
-            for (int j = 0; j < currentMed..size(); j++) {
-                switch (currentMed.takenAt.get(j)) {
-                    case "WakeUp":
-
-                        break;
-                    case "Breakfast":
-                        break;
-                    case "Lunch":
-                        break;
-                    case "Dinner":
-                        break;
-                    case "Bedtime":
-                        break;
+            }
+            else if (med instanceof SpecificDayMedication){
+                ArrayList<ArrayList<LocalTime>> DayToTimes = ((SpecificDayMedication) med).Times;
+                for (ArrayList<LocalTime> times: DayToTimes
+                     ) {
+                    
                 }
             }
+            else if (med instanceof WeeklyMedication){
+
+            }
+            else if (med instanceof MonthlyMedication){
+
+            }
         }
-        return nextMeds;
-    }*/
+        return new HashMap<>();
+    }
 //Write Back To File
     public void writeToFile(){
         //Open File / Create File

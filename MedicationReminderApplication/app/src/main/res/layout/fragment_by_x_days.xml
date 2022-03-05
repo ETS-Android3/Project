@@ -11,12 +11,11 @@
         android:id="@+id/recyclerByWeekTimes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextNumberOfDays" >
+        tools:layout_editor_absoluteY="348dp">
 
     </androidx.recyclerview.widget.RecyclerView>
 
@@ -53,4 +52,25 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/recyclerByWeekTimes" />
+
+    <EditText
+        android:id="@+id/editTextDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:inputType="date"
+        app:layout_constraintEnd_toEndOf="@+id/editTextNumberOfDays"
+        app:layout_constraintStart_toStartOf="@+id/editTextNumberOfDays"
+        app:layout_constraintTop_toBottomOf="@+id/editTextNumberOfDays" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start Date"
+        app:layout_constraintBottom_toBottomOf="@+id/editTextDate"
+        app:layout_constraintEnd_toStartOf="@+id/editTextDate"
+        app:layout_constraintTop_toBottomOf="@+id/editTextNumberOfDays" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

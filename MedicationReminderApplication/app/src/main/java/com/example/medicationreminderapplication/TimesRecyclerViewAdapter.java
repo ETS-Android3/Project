@@ -40,6 +40,7 @@ public class TimesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                 Times.add(new ArrayList<>());
             }
         }
+
         for (String day: days
              ) {
             list.add(new RecyclerEntity(day, Times.get(counter),false));
