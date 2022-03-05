@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.File;
 import java.net.URL;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -103,9 +104,14 @@ public class DataController {
             }
             else if (med instanceof SpecificDayMedication){
                 ArrayList<ArrayList<LocalTime>> DayToTimes = ((SpecificDayMedication) med).Times;
+                DayOfWeek now = current.getDayOfWeek();
+                for (int i = 0; i < 7; i++) {
+                    
+                }
+
                 for (ArrayList<LocalTime> times: DayToTimes
                      ) {
-                    
+
                 }
             }
             else if (med instanceof WeeklyMedication){
