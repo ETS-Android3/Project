@@ -141,15 +141,24 @@ public class mainPage extends AppCompatActivity {
                         TabLayout byDaysTabs = (TabLayout) vp.findViewById(R.id.tabsDays);
                         switch (byDaysTabs.getSelectedTabPosition()){
                             case 0:{
-                                //TODO:: Get days
-                                //TODO:: Get times
-                                //TODO:: Add data to data controller
+                                //Get days
+                                int numOfDays = Integer.parseInt(byXDays.findViewById(R.id.editTextNumberOfDays).toString());
+                                //Get times
+                                RecyclerView recycler = byXDays.findViewById(R.id.recyclerByWeekTimes);
+                                RecyclerViewAdapter timeRVA = (RecyclerViewAdapter) recycler.getAdapter();
+                                //Add data to data controller
+                                newMed = new EveryXDaysMedication(name, dosage, quantity, type, Boolean.TRUE, timeRVA.mTimes, numOfDays);
+                                dc.newMed(newMed);
                                 break;
                             }
                             case 1:{
-                                //TODO:: Get days
-                                //TODO:: Get times
-                                //TODO:: Add data to data controller
+                                //Get times
+                                RecyclerView recyclerBySpecificDay = byXDays.findViewById(R.id.recyclerBySpecificDay);
+                                TimesRecyclerViewAdapter timeRVA = (TimesRecyclerViewAdapter) recyclerBySpecificDay.getAdapter();
+                                ArrayList<ArrayList<LocalTime>> times = timeRVA.mTimes;
+                                //Add data to data controller
+                                newMed = new SpecificDayMedication(name, dosage, quantity, type, Boolean.TRUE, times);
+                                dc.newMed(newMed);
                             }
                         }
                         break;
@@ -162,7 +171,7 @@ public class mainPage extends AppCompatActivity {
                         ArrayList<LocalTime> times = timeRVA.mTimes;
                         ArrayList<String> days = new ArrayList<>();
                         days.add(day);
-                        newMed = new SpecificDayMedication(name, dosage, quantity, type, Boolean.TRUE, times, days);
+                        newMed = new WeeklyMedication(name, dosage, quantity, type, Boolean.TRUE, times, days);
                         dc.newMed(newMed);
                         break;
                     }
@@ -258,7 +267,7 @@ public class mainPage extends AppCompatActivity {
                         Toast.makeText(context, String.join(" ", name, dosage, String.valueOf(quantity), type, day, times.toString()), Toast.LENGTH_SHORT).show();
                         ArrayList<String> days = new ArrayList<>();
                         days.add(day);
-                        newMed = new SpecificDayMedication(name, dosage, quantity, type, Boolean.TRUE, times, days);
+                        newMed = new WeeklyMedication(name, dosage, quantity, type, Boolean.TRUE, times, days);
                         dc.newMed(newMed);
                         break;
                     }

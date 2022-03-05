@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class DayMedication extends Medication {
+public abstract class
+
+DayMedication extends Medication {
     ArrayList<LocalTime> times;
     public DayMedication(String Name, String strength, int NumLeft, String type, Boolean WithFood, ArrayList<LocalTime> TakenAt, Map<String, Boolean> PrevTakenAt){
         super(Name,strength,NumLeft, type, WithFood, PrevTakenAt);
