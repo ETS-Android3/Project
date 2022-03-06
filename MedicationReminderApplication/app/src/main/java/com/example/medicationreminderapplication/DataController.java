@@ -126,11 +126,6 @@ public class DataController {
                         }
                     }
                 }
-
-                for (ArrayList<LocalTime> times: DayToTimes
-                     ) {
-
-                }
             }
             else if (med instanceof WeeklyMedication){
 
