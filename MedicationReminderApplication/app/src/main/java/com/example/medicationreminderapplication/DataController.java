@@ -105,8 +105,26 @@ public class DataController {
             else if (med instanceof SpecificDayMedication){
                 ArrayList<ArrayList<LocalTime>> DayToTimes = ((SpecificDayMedication) med).Times;
                 DayOfWeek now = current.getDayOfWeek();
+                int Limit = now.getValue()-1;
                 for (int i = 0; i < 7; i++) {
-                    
+                    int currentInd = i+Limit;
+                    if (currentInd > 6){
+                        currentInd -= 7;
+                    }
+                    ArrayList<LocalTime> Times = DayToTimes.get(currentInd);
+                    for (LocalTime time: Times
+                         ) {
+                        LocalDate tempDate = current.plusDays(currentInd).toLocalDate();
+                        LocalDateTime tempDateTime = tempDate.atTime(time);
+                        if (tempDateTime.isBefore(nextDateTime) && tempDateTime.isAfter(current)){
+                            nextMeds.clear();
+                            nextMeds.add(med);
+                            nextDateTime = tempDateTime;
+                        }
+                        else if (tempDateTime.isEqual(current)){
+                            nextMeds.add(med);
+                        }
+                    }
                 }
 
                 for (ArrayList<LocalTime> times: DayToTimes
