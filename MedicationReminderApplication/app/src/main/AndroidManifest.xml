@@ -13,9 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MedicationReminderApplication.NoActionBar">
         <activity
-            android:name=".Notification"
-            android:exported="true" />
-        <activity
             android:name=".Medication_list"
             android:exported="false" />
         <activity
@@ -33,6 +30,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <receiver
+            android:name=".MyBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name=".NotificationIntentService"
+            android:exported="false" />
     </application>
+
+
 
 </manifest>

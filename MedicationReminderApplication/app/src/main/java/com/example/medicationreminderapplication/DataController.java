@@ -72,12 +72,13 @@ public class DataController {
         //Add Medication to list
     }
 //Checks for which medications are meant to be taken next
-    HashMap<Date, ArrayList<Medication>> NextMeds(){
+    HashMap<LocalDateTime, ArrayList<Medication>> NextMeds(){
+        HashMap<LocalDateTime, ArrayList<Medication>> nextMedMap = new HashMap<>();
         //Get current time
-        Date curr = Calendar.getInstance().getTime();
         LocalDateTime current = LocalDateTime.now();
-        //Get time in 24 hours
         //Check Daily Medications
+        LocalDate nextDate = LocalDate.MAX;
+        ArrayList<Medication> nextMonthlyMeds = new ArrayList<>();
         LocalDateTime nextDateTime = LocalDateTime.MAX;
         ArrayList<Medication> nextMeds = new ArrayList<>();
         for (Medication med: MedicationList
@@ -91,7 +92,15 @@ public class DataController {
                     while (previousDateTime.isBefore(current)){
                         previousDateTime = previousDateTime.plusDays(((EveryXDaysMedication) med).numberOfDays);
                     }
-                    if (nextDateTime.isAfter(previousDateTime)){
+
+                    if (previousDateTime.toLocalDate().isBefore(nextDate)){
+                        nextMeds.clear();
+                        nextMonthlyMeds.clear();
+                        nextMeds.add(med);
+                        nextDateTime = previousDateTime;
+                        nextDate = previousDateTime.toLocalDate();
+                    }
+                    else if (nextDateTime.isAfter(previousDateTime)){
                         nextDateTime = previousDateTime;
                         nextMeds.clear();
                         nextMeds.add(med);
@@ -116,12 +125,19 @@ public class DataController {
                          ) {
                         LocalDate tempDate = current.plusDays(currentInd).toLocalDate();
                         LocalDateTime tempDateTime = tempDate.atTime(time);
-                        if (tempDateTime.isBefore(nextDateTime) && tempDateTime.isAfter(current)){
+                        if (tempDateTime.toLocalDate().isBefore(nextDate) && tempDateTime.isAfter(current)){
+                            nextMeds.clear();
+                            nextMonthlyMeds.clear();
+                            nextMeds.add(med);
+                            nextDateTime = tempDateTime;
+                            nextDate = tempDateTime.toLocalDate();
+                        }
+                        else if (tempDateTime.isBefore(nextDateTime) && tempDateTime.isAfter(current)){
                             nextMeds.clear();
                             nextMeds.add(med);
                             nextDateTime = tempDateTime;
                         }
-                        else if (tempDateTime.isEqual(current)){
+                        else if (tempDateTime.isEqual(nextDateTime)){
                             nextMeds.add(med);
                         }
                     }
@@ -146,7 +162,15 @@ public class DataController {
                 for (LocalTime time: times
                      ) {
                     LocalDateTime tempDateTime = tempDate.atTime(time);
-                    if (tempDateTime.isBefore(nextDateTime)){
+
+                    if (tempDateTime.toLocalDate().isBefore(nextDate)){
+                        nextMeds.clear();
+                        nextMonthlyMeds.clear();
+                        nextMeds.add(med);
+                        nextDateTime = tempDateTime;
+                        nextDate = tempDateTime.toLocalDate();
+                    }
+                    else if (tempDateTime.isBefore(nextDateTime)){
                         nextMeds.clear();
                         nextMeds.add(med);
                         nextDateTime = tempDateTime;
@@ -157,10 +181,27 @@ public class DataController {
                 }
             }
             else if (med instanceof MonthlyMedication){
-                
+                int dayOfMonth = ((MonthlyMedication) med).dayOfMonth;
+                LocalDate currentDate = current.toLocalDate();
+                int lastDayOfMonth = currentDate.lengthOfMonth();
+                if (dayOfMonth > lastDayOfMonth){
+                    dayOfMonth = lastDayOfMonth;
+                }
+                if (currentDate.getDayOfMonth() < dayOfMonth){
+                    LocalDate tempDate = LocalDate.of(currentDate.getYear(), currentDate.getMonthValue(), dayOfMonth);
+                    if (tempDate.isBefore(nextDate)){
+                        nextMonthlyMeds.clear();
+                        nextMonthlyMeds.add(med);
+                        nextDate = tempDate;
+                        nextDateTime = tempDate.atTime(LocalTime.NOON);
+                    }
+
+                }
             }
         }
-        return new HashMap<>();
+        nextMeds.addAll(nextMonthlyMeds);
+        nextMedMap.put(nextDateTime, nextMeds);
+        return nextMedMap;
     }
 //Write Back To File
     public void writeToFile(){

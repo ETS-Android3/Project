@@ -3,7 +3,7 @@ package com.example.medicationreminderapplication;
 import java.util.Map;
 
 public class MonthlyMedication extends Medication {
-    private int dayOfMonth;
+    public int dayOfMonth;
 
     public MonthlyMedication(String Name, String strength, int NumLeft, String type, Boolean WithFood, int dayOfMonth, Map<String, Boolean> PrevTakenAt) {
         super(Name, strength, NumLeft, type, WithFood, PrevTakenAt);
