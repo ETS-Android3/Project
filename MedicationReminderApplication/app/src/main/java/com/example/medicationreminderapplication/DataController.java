@@ -128,10 +128,36 @@ public class DataController {
                 }
             }
             else if (med instanceof WeeklyMedication){
+                String day = ((WeeklyMedication) med).Day;
+                ArrayList<LocalTime> times = ((WeeklyMedication) med).times;
+                DayOfWeek dayOfWeek = DayOfWeek.valueOf(day.toUpperCase(Locale.ROOT));
 
+                DayOfWeek now = current.getDayOfWeek();
+
+                int daysUntil;
+                if (dayOfWeek.getValue()> now.getValue()){
+                    daysUntil = dayOfWeek.getValue()- now.getValue();
+                }
+                else{
+                    daysUntil = 7-(now.getValue()-dayOfWeek.getValue());
+                }
+
+                LocalDate tempDate = current.toLocalDate();
+                for (LocalTime time: times
+                     ) {
+                    LocalDateTime tempDateTime = tempDate.atTime(time);
+                    if (tempDateTime.isBefore(nextDateTime)){
+                        nextMeds.clear();
+                        nextMeds.add(med);
+                        nextDateTime = tempDateTime;
+                    }
+                    else if (tempDateTime.isEqual(nextDateTime)){
+                        nextMeds.add(med);
+                    }
+                }
             }
             else if (med instanceof MonthlyMedication){
-
+                
             }
         }
         return new HashMap<>();

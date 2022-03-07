@@ -173,9 +173,7 @@ public class mainPage extends AppCompatActivity {
                         RecyclerView timeRV = (RecyclerView)  vp.findViewById(R.id.recyclerByWeekTimes);
                         RecyclerViewAdapter timeRVA = (RecyclerViewAdapter)timeRV.getAdapter();
                         ArrayList<LocalTime> times = timeRVA.mTimes;
-                        ArrayList<String> days = new ArrayList<>();
-                        days.add(day);
-                        newMed = new WeeklyMedication(name, dosage, quantity, type, Boolean.TRUE, times, days);
+                        newMed = new WeeklyMedication(name, dosage, quantity, type, Boolean.TRUE, times, day);
                         dc.newMed(newMed);
                         break;
                     }
@@ -269,9 +267,7 @@ public class mainPage extends AppCompatActivity {
                         RecyclerViewAdapter timeRVA = (RecyclerViewAdapter)timeRV.getAdapter();
                         ArrayList<LocalTime> times = timeRVA.mTimes;
                         Toast.makeText(context, String.join(" ", name, dosage, String.valueOf(quantity), type, day, times.toString()), Toast.LENGTH_SHORT).show();
-                        ArrayList<String> days = new ArrayList<>();
-                        days.add(day);
-                        newMed = new WeeklyMedication(name, dosage, quantity, type, Boolean.TRUE, times, days);
+                        newMed = new WeeklyMedication(name, dosage, quantity, type, Boolean.TRUE, times, day);
                         dc.newMed(newMed);
                         break;
                     }
