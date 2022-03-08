@@ -15,10 +15,13 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +29,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.android.volley.ParseError;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -34,8 +38,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoField;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
 
 public class mainPage extends AppCompatActivity {
     public DataController dc;
@@ -49,6 +60,7 @@ public class mainPage extends AppCompatActivity {
         setContentView(R.layout.activity_main_page);
         context = this;
         dc = DataController.getInstance(getFilesDir(), Volley.newRequestQueue(this));
+        CheckNextNotif();
         String gtin = getIntent().getStringExtra("GTIN");
         if (gtin!=null){
             if (gtin.equals("-1")){
@@ -266,7 +278,6 @@ public class mainPage extends AppCompatActivity {
                         RecyclerView timeRV = (RecyclerView)  vp.findViewById(R.id.recyclerByWeekTimes);
                         RecyclerViewAdapter timeRVA = (RecyclerViewAdapter)timeRV.getAdapter();
                         ArrayList<LocalTime> times = timeRVA.mTimes;
-                        Toast.makeText(context, String.join(" ", name, dosage, String.valueOf(quantity), type, day, times.toString()), Toast.LENGTH_SHORT).show();
                         newMed = new WeeklyMedication(name, dosage, quantity, type, Boolean.TRUE, times, day);
                         dc.newMed(newMed);
                         break;
@@ -287,6 +298,16 @@ public class mainPage extends AppCompatActivity {
         dialog.show();
     }
 
+    public void CheckNextNotif(){
+        HashMap<LocalDateTime, ArrayList<Medication>> nextMeds = dc.NextMeds();
+        Intent notifyIntent = new Intent(this,MyBroadcastReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 2, notifyIntent,PendingIntent.FLAG_IMMUTABLE);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        LocalDateTime current = LocalDateTime.now();
+        Long time = current.plusSeconds(10).atZone(ZoneId.systemDefault()).toEpochSecond();
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME, 100, pendingIntent);
+        Log.e("Done", "Done");
+    }
 
     class AdapterByWhich extends FragmentStateAdapter {
 

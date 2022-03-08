@@ -21,8 +21,9 @@ public class NotificationIntentService extends IntentService {
         Notification.Builder builder = new Notification.Builder(this);
         builder.setContentTitle("MedicationReminder");
         builder.setContentText("You have Medication(s) to take");
+        builder.setSmallIcon(R.drawable.ic_code_scanner_flash_on);
         Intent notifyIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 2, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 2, notifyIntent, PendingIntent.FLAG_IMMUTABLE);
         builder.setContentIntent(pendingIntent);
         Notification notificationCompat = builder.build();
         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
