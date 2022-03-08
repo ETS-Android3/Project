@@ -2,6 +2,7 @@ package com.example.medicationreminderapplication;
 
 import android.app.IntentService;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.PendingIntent;
 import android.content.Intent;
 
@@ -18,12 +19,12 @@ public class NotificationIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        Notification.Builder builder = new Notification.Builder(this);
+        Notification.Builder builder = new Notification.Builder(this, NotificationChannel.DEFAULT_CHANNEL_ID);
         builder.setContentTitle("MedicationReminder");
         builder.setContentText("You have Medication(s) to take");
-        builder.setSmallIcon(R.drawable.ic_code_scanner_flash_on);
+        builder.setSmallIcon(R.drawable.ic_stat_add_alarm);
         Intent notifyIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 2, notifyIntent, PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, NOTIFICATION_ID, notifyIntent, PendingIntent.FLAG_IMMUTABLE);
         builder.setContentIntent(pendingIntent);
         Notification notificationCompat = builder.build();
         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);

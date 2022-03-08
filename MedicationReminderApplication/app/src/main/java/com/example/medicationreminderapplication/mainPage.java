@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -305,7 +306,8 @@ public class mainPage extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         LocalDateTime current = LocalDateTime.now();
         Long time = current.plusSeconds(10).atZone(ZoneId.systemDefault()).toEpochSecond();
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME, 100, pendingIntent);
+        alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+5000, pendingIntent);
+
         Log.e("Done", "Done");
     }
 
