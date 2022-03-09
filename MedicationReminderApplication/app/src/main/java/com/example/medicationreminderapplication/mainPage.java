@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Map;
 
 public class mainPage extends AppCompatActivity {
     public DataController dc;
@@ -304,11 +305,9 @@ public class mainPage extends AppCompatActivity {
         Intent notifyIntent = new Intent(this,MyBroadcastReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 2, notifyIntent,PendingIntent.FLAG_IMMUTABLE);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        LocalDateTime current = LocalDateTime.now();
-        Long time = current.plusSeconds(10).atZone(ZoneId.systemDefault()).toEpochSecond();
-        alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+5000, pendingIntent);
-
-        Log.e("Done", "Done");
+        Map.Entry<LocalDateTime, ArrayList<Medication>> nextMed = nextMeds.entrySet().iterator().next();
+        Long time = nextMed.getKey().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent);
     }
 
     class AdapterByWhich extends FragmentStateAdapter {

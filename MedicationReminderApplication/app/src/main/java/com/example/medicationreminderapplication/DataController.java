@@ -38,7 +38,8 @@ public class DataController {
     private LocalTime Bedtime;
     private static DataController instance = null;
     static ArrayList<Medication> MedicationList;
-
+    private LocalDateTime nextMedDateTime = null;
+    private ArrayList<Medication> nextMedList = null;
 //Creates an instance of the Data controller and starts data reading
     public static DataController getInstance(File fileDirectory, RequestQueue requestQueue){
         if (instance == null){
@@ -72,8 +73,7 @@ public class DataController {
         //Add Medication to list
     }
 //Checks for which medications are meant to be taken next
-    HashMap<LocalDateTime, ArrayList<Medication>> NextMeds(){
-        HashMap<LocalDateTime, ArrayList<Medication>> nextMedMap = new HashMap<>();
+    void NextMeds(){
         //Get current time
         LocalDateTime current = LocalDateTime.now();
         //Check Daily Medications
@@ -200,10 +200,19 @@ public class DataController {
             }
         }
         nextMeds.addAll(nextMonthlyMeds);
-        nextMedMap.put(nextDateTime, nextMeds);
-        return nextMedMap;
+        nextMedList=nextMeds;
+        nextMedDateTime = nextDateTime;
     }
-//Write Back To File
+
+    public ArrayList<Medication> getNextMedList() {
+        return nextMedList;
+    }
+
+    public LocalDateTime getNextMedDateTime() {
+        return nextMedDateTime;
+    }
+
+    //Write Back To File
     public void writeToFile(){
         //Open File / Create File
         //Encrypt times
