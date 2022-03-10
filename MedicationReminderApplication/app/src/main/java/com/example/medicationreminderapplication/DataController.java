@@ -1,7 +1,12 @@
 package com.example.medicationreminderapplication;
+import android.content.Context;
+import android.security.keystore.KeyGenParameterSpec;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.security.crypto.EncryptedFile;
+import androidx.security.crypto.MasterKeys;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -14,8 +19,15 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -40,10 +52,12 @@ public class DataController {
     static ArrayList<Medication> MedicationList;
     private LocalDateTime nextMedDateTime = null;
     private ArrayList<Medication> nextMedList = null;
+    Context context;
+
 //Creates an instance of the Data controller and starts data reading
-    public static DataController getInstance(File fileDirectory, RequestQueue requestQueue){
+    public static DataController getInstance(Context context, RequestQueue requestQueue){
         if (instance == null){
-            instance = new DataController(fileDirectory,requestQueue);
+            instance = new DataController(context,requestQueue);
         }
         return instance;
     }
@@ -52,25 +66,50 @@ public class DataController {
         return instance;
     }
 
-    private DataController(File fileDirectory, RequestQueue requestQueue){
+    private DataController(Context context, RequestQueue requestQueue){
+        this.context = context;
         //Instantiate Medication list
         MedicationList = new ArrayList<Medication>();
         //Instantiate request queue
         reqQueue = requestQueue;
         reqQueue.start();
         //Collect Data
-        CollectData(fileDirectory);
+        CollectData();
     }
 //Reads Data from the file and decrypts it
-    static void CollectData(File directory){
-        //Open File
-        File opened = new File(directory, "medInfo");
-        //Read line in file
+    void CollectData(){
+// Although you can define your own key generation parameter specification, it's
+// recommended that you use the value specified here.
+        KeyGenParameterSpec keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC;
+        String mainKeyAlias = null;
+        try {
+            mainKeyAlias = MasterKeys.getOrCreate(keyGenParameterSpec);
+            String fileToRead = "MedicationInfo.txt";
+            EncryptedFile encryptedFile = new EncryptedFile.Builder(
+                    new File(context.getFilesDir(), fileToRead),
+                    context,
+                    mainKeyAlias,
+                    EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
+            ).build();
 
-        //Decrypt Line/file
-        //Close file
-        //Create medication obj
-        //Add Medication to list
+            InputStream inputStream = encryptedFile.openFileInput();
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            int nextByte = inputStream.read();
+            while (nextByte != -1) {
+                byteArrayOutputStream.write(nextByte);
+                nextByte = inputStream.read();
+            }
+
+            byte[] plaintext = byteArrayOutputStream.toByteArray();
+            Log.e("Decrypted", plaintext.toString());
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
     }
 //Checks for which medications are meant to be taken next
     void NextMeds(){
@@ -202,6 +241,7 @@ public class DataController {
         nextMeds.addAll(nextMonthlyMeds);
         nextMedList=nextMeds;
         nextMedDateTime = nextDateTime;
+        writeToFile();
     }
 
     public ArrayList<Medication> getNextMedList() {
@@ -214,16 +254,141 @@ public class DataController {
 
     //Write Back To File
     public void writeToFile(){
-        //Open File / Create File
-        //Encrypt times
-        //Write times
-        //encrypt medication list
-        //write medication list
-        //close file
+        KeyGenParameterSpec keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC;
+        try {
+            String mainKeyAlis = MasterKeys.getOrCreate(keyGenParameterSpec);
+            String fileToWrite = "MedicationInfo.txt";
+            Log.e("DIRECTORY", context.getFilesDir().toString());
+            EncryptedFile encryptedFile = new EncryptedFile.Builder(
+                    new File(context.getFilesDir(),fileToWrite),
+                    context,
+                    mainKeyAlis,
+                    EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB).build();
+            String fileString = "";
+            for (Medication med: MedicationList
+                 ) {
+                if (med instanceof EveryXDaysMedication){
+                    fileString = fileString.concat("EveryXDay\n");
+                    fileString = fileString.concat(med.name);
+                    fileString = fileString.concat("/");
+                    fileString = fileString.concat(med.Strength);
+                    fileString = fileString.concat("/");
+                    fileString = fileString.concat(String.valueOf(med.numLeft));
+                    fileString = fileString.concat("/");
+                    fileString = fileString.concat(med.Type);
+                    fileString = fileString.concat("/");
+                    if (med.withFood){
+                        fileString = fileString.concat("1");
+                    }
+                    else{
+                        fileString = fileString.concat("0");
+                    }
+                    fileString = fileString.concat("/");
+                    fileString = fileString.concat(((EveryXDaysMedication) med).times.toString());
+                    fileString = fileString.concat("/");
+                    fileString = fileString.concat(String.valueOf(((EveryXDaysMedication) med).numberOfDays));
+                    fileString = fileString.concat("/");
+                    fileString = fileString.concat(((EveryXDaysMedication) med).startDate.toString());
+                    if (!med.prevTakenAt.isEmpty()){
+                        fileString = fileString.concat("/");
+                        fileString = fileString.concat(med.prevTakenAt.toString());
+                    }
+                }
+                else if (med instanceof SpecificDayMedication){
+                    fileString = fileString.concat("SpecificDay\n");
+                    fileString = fileString.concat(med.name);
+                    fileString = fileString.concat("/");
+                    fileString = fileString.concat(med.Strength);
+                    fileString = fileString.concat("/");
+                    fileString = fileString.concat(String.valueOf(med.numLeft));
+                    fileString = fileString.concat("/");
+                    fileString = fileString.concat(med.Type);
+                    fileString = fileString.concat("/");
+                    if (med.withFood){
+                        fileString = fileString.concat("1");
+                    }
+                    else{
+                        fileString = fileString.concat("0");
+                    }
+                    fileString = fileString.concat("/");
+                    fileString = fileString.concat(((SpecificDayMedication) med).Times.toString());
+                    if (!med.prevTakenAt.isEmpty()){
+                        fileString = fileString.concat("/");
+                        fileString = fileString.concat(med.prevTakenAt.toString());
+                    }
+                }
+                else if (med instanceof WeeklyMedication){
+                    fileString = fileString.concat("Weekly\n");
+                    fileString = fileString.concat(med.name);
+                    fileString = fileString.concat("/");
+                    fileString = fileString.concat(med.Strength);
+                    fileString = fileString.concat("/");
+                    fileString = fileString.concat(String.valueOf(med.numLeft));
+                    fileString = fileString.concat("/");
+                    fileString = fileString.concat(med.Type);
+                    fileString = fileString.concat("/");
+                    if (med.withFood){
+                        fileString = fileString.concat("1");
+                    }
+                    else{
+                        fileString = fileString.concat("0");
+                    }
+                    fileString = fileString.concat("/");
+                    fileString = fileString.concat(((WeeklyMedication) med).times.toString());
+                    fileString = fileString.concat("/");
+                    fileString = fileString.concat(((WeeklyMedication) med).Day);
+                    if (!med.prevTakenAt.isEmpty()){
+                        fileString = fileString.concat("/");
+                        fileString = fileString.concat(med.prevTakenAt.toString());
+                    }
+                }
+                else if (med instanceof MonthlyMedication){
+                    fileString = fileString.concat("Monthly\n");
+                    fileString = fileString.concat(med.name);
+                    fileString = fileString.concat("/");
+                    fileString = fileString.concat(med.Strength);
+                    fileString = fileString.concat("/");
+                    fileString = fileString.concat(String.valueOf(med.numLeft));
+                    fileString = fileString.concat("/");
+                    fileString = fileString.concat(med.Type);
+                    fileString = fileString.concat("/");
+                    if (med.withFood){
+                        fileString = fileString.concat("1");
+                    }
+                    else{
+                        fileString = fileString.concat("0");
+                    }
+                    fileString = fileString.concat("/");
+                    fileString = fileString.concat(String.valueOf(((MonthlyMedication) med).dayOfMonth));
+                    if (!med.prevTakenAt.isEmpty()){
+                        fileString = fileString.concat("/");
+                        fileString = fileString.concat(med.prevTakenAt.toString());
+                    }
+                }
+                fileString = fileString.concat("\n");
+            }
+            fileString = fileString.concat("NEXTMEDS\n");
+            for (Medication med: nextMedList
+                 ) {
+                fileString = fileString.concat(med.toString());
+                fileString = fileString.concat("/");
+            }
+            byte[] fileContent = fileString.getBytes(StandardCharsets.UTF_8);
+            OutputStream outputStream = encryptedFile.openFileOutput();
+            outputStream.write(fileContent);
+            outputStream.flush();
+            outputStream.close();
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 //Adds new medications
     void newMed(Medication med){
         MedicationList.add(med);
+        NextMeds();
+        writeToFile();
     }
 //Get medication information from API
     void fromAPI(String GTIN, final VolleyCallBack callBack){

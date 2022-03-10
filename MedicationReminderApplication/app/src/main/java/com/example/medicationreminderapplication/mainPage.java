@@ -43,11 +43,13 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class mainPage extends AppCompatActivity {
@@ -61,8 +63,9 @@ public class mainPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
         context = this;
-        dc = DataController.getInstance(getFilesDir(), Volley.newRequestQueue(this));
-        CheckNextNotif();
+        dc = DataController.getInstance(context, Volley.newRequestQueue(this));
+        if (!dc.medications().isEmpty()){
+        CheckNextNotif();}
         String gtin = getIntent().getStringExtra("GTIN");
         if (gtin!=null){
             if (gtin.equals("-1")){
@@ -157,13 +160,14 @@ public class mainPage extends AppCompatActivity {
                         switch (byDaysTabs.getSelectedTabPosition()){
                             case 0:{
                                 //Get days
-                                int numOfDays = Integer.parseInt(byXDays.findViewById(R.id.editTextNumberOfDays).toString());
+                                EditText dayText = byXDays.findViewById(R.id.editTextNumberOfDays);
+                                int numOfDays = Integer.parseInt(dayText.getText().toString());
                                 //Get times
                                 RecyclerView recycler = byXDays.findViewById(R.id.recyclerByWeekTimes);
                                 RecyclerViewAdapter timeRVA = (RecyclerViewAdapter) recycler.getAdapter();
 
                                 EditText dateText = byXDays.findViewById(R.id.editTextDate);
-                                LocalDate date = LocalDate.parse(dateText.getText().toString());
+                                LocalDate date = LocalDate.now(); // TODO:: Parse from dateText
                                 //Add data to data controller
                                 newMed = new EveryXDaysMedication(name, dosage, quantity, type, Boolean.TRUE, timeRVA.mTimes, numOfDays, date);
                                 dc.newMed(newMed);
@@ -301,12 +305,11 @@ public class mainPage extends AppCompatActivity {
     }
 
     public void CheckNextNotif(){
-        HashMap<LocalDateTime, ArrayList<Medication>> nextMeds = dc.NextMeds();
+        LocalDateTime nextDateTime = dc.getNextMedDateTime();
         Intent notifyIntent = new Intent(this,MyBroadcastReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 2, notifyIntent,PendingIntent.FLAG_IMMUTABLE);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Map.Entry<LocalDateTime, ArrayList<Medication>> nextMed = nextMeds.entrySet().iterator().next();
-        Long time = nextMed.getKey().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        Long time = nextDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent);
     }
 

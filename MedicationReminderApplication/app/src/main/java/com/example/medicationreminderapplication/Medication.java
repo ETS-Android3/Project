@@ -26,6 +26,10 @@ public abstract class Medication {
             withFood = WithFood;
             prevTakenAt = new HashMap<String, Boolean>();
         }
+
+        public String toString(){
+            return name.concat(" ").concat(Strength);
+        }
 }
 
 
