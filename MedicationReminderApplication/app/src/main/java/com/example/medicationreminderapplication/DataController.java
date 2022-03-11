@@ -15,6 +15,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.Volley;
+import com.google.zxing.common.StringUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -101,7 +102,78 @@ public class DataController {
             }
 
             byte[] plaintext = byteArrayOutputStream.toByteArray();
-            Log.e("Decrypted", plaintext.toString());
+            String fileContent = new String(plaintext, StandardCharsets.UTF_8);
+            String[] lines = fileContent.split("\n");
+            int currentMedType = 0;
+            for (String line: lines
+                 ) {
+                if (line.equals("EveryXDay")){
+                    currentMedType = 0;
+                }
+                else if (line.equals("SpecificDay")){
+                    currentMedType = 1;
+                }
+                else if (line.equals("Weekly")){
+                    currentMedType = 2;
+                }
+                else if (line.equals("Monthly")){
+                    currentMedType = 3;
+                }
+                else if (line.equals("NEXTMEDS")){
+                    currentMedType = -1;
+                }
+                else{
+                    switch (currentMedType){
+                        case -1:{
+                            //TODO:: NEXT MEDS
+                            break;
+                        }
+                        case 0:{
+                            //TODO:: Every X Day
+                            String[] parts = line.split("/");
+                            String Name = parts[0];
+                            String strength = parts[1];
+                            int NumLeft = Integer.parseInt(parts[2]);
+                            String type = parts[3];
+                            Boolean WithFood;
+                            if (parts[4] == "0"){
+                                WithFood = Boolean.FALSE;
+                            }
+                            else{
+                                WithFood = Boolean.TRUE;
+                            }
+                            String takenAtTime = parts[5].substring(1, parts[5].length()-1);
+                            String[] takenAtTemp = takenAtTime.split(", ");
+                            ArrayList<LocalTime> TakenAt = new ArrayList<>();
+                            for (String time: takenAtTemp
+                                 ) {
+                                TakenAt.add(LocalTime.parse(time));
+                            }
+                            int numOfDays = Integer.parseInt(parts[6]);
+                            LocalDate StartDate = LocalDate.parse(parts[7]);
+                            EveryXDaysMedication med;
+                            if (parts.length == 9){
+                                //TODO:: Previously Taken At
+                                med = new EveryXDaysMedication(Name, strength, NumLeft, type, WithFood, TakenAt, numOfDays, StartDate);
+                            }
+                            else{
+                                med = new EveryXDaysMedication(Name, strength, NumLeft, type, WithFood, TakenAt, numOfDays, StartDate);
+                            }
+                            newMed(med);
+                            break;
+                        }
+                        case 1:{
+                            //TODO:: Specific Day
+                        }
+                        case 2:{
+                            //TODO:: Weekly
+                        }
+                        case 3:{
+                            //TODO:: Monthly
+                        }
+                    }
+                }
+            }
         } catch (GeneralSecurityException e) {
             e.printStackTrace();
         } catch (IOException e) {
