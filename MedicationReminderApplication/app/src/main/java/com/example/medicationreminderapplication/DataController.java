@@ -126,6 +126,13 @@ public class DataController {
                     switch (currentMedType){
                         case -1:{
                             //TODO:: NEXT MEDS
+                            String[] meds = line.split("/");
+                            nextMedList.clear();
+                            for (String medCombo: meds
+                                 ) {
+                                int index = medIndex(medCombo);
+                                nextMedList.add(MedicationList.get(index));
+                            }
                             break;
                         }
                         case 0:{
@@ -233,7 +240,6 @@ public class DataController {
                             break;
                         }
                         case 3:{
-                            //TODO:: Monthly
                             String[] parts = line.split("/");
                             String Name = parts[0];
                             String strength = parts[1];
@@ -266,9 +272,6 @@ public class DataController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-
     }
 //Checks for which medications are meant to be taken next
     void NextMeds(){
@@ -545,7 +548,9 @@ public class DataController {
     }
 //Adds new medications
     void newMed(Medication med){
-        MedicationList.add(med);
+        int index = medIndex(med.toString());
+        if (index==-1){MedicationList.add(med);}
+        else {MedicationList.get(index).numLeft += med.numLeft;}
         NextMeds();
         writeToFile();
     }
@@ -578,5 +583,14 @@ public class DataController {
 //Get All Current Medications
     ArrayList<Medication> medications(){
         return MedicationList;
+    }
+//Get MedicationIndex from name/strength combo
+    int medIndex(String medNameStr){
+        for (int index = 0; index<MedicationList.size(); index++){
+            if (MedicationList.get(index).toString()==medNameStr){
+                return index;
+            }
+        }
+        return -1;
     }
 }
