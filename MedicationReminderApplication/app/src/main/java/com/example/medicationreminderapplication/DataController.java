@@ -153,7 +153,8 @@ public class DataController {
                             ArrayList<LocalTime> TakenAt = new ArrayList<>();
                             for (String time: takenAtTemp
                                  ) {
-                                TakenAt.add(LocalTime.parse(time));
+                                if (time.length()!=0){
+                                TakenAt.add(LocalTime.parse(time));}
                             }
                             int numOfDays = Integer.parseInt(parts[6]);
                             LocalDate StartDate = LocalDate.parse(parts[7]);
@@ -414,13 +415,12 @@ public class DataController {
         return nextMedDateTime;
     }
 
-    //Write Back To File
+//Write Back To File
     public void writeToFile(){
         KeyGenParameterSpec keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC;
         try {
             String mainKeyAlis = MasterKeys.getOrCreate(keyGenParameterSpec);
             String fileToWrite = "MedicationInfo.txt";
-            Log.e("DIRECTORY", context.getFilesDir().toString());
             EncryptedFile encryptedFile = new EncryptedFile.Builder(
                     new File(context.getFilesDir(),fileToWrite),
                     context,

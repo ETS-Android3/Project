@@ -309,7 +309,7 @@ public class mainPage extends AppCompatActivity {
         Intent notifyIntent = new Intent(this,MyBroadcastReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 2, notifyIntent,PendingIntent.FLAG_IMMUTABLE);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Long time = nextDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        Long time = LocalDateTime.now().plusSeconds(10).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent);
     }
 
