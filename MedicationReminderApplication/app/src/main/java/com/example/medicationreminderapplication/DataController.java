@@ -129,7 +129,6 @@ public class DataController {
                             break;
                         }
                         case 0:{
-                            //TODO:: Every X Day
                             String[] parts = line.split("/");
                             String Name = parts[0];
                             String strength = parts[1];
@@ -164,6 +163,42 @@ public class DataController {
                         }
                         case 1:{
                             //TODO:: Specific Day
+                            String[] parts = line.split("/");
+                            String Name = parts[0];
+                            String strength = parts[1];
+                            int NumLeft = Integer.parseInt(parts[2]);
+                            String type = parts[3];
+                            Boolean WithFood;
+                            if (parts[4] == "0"){
+                                WithFood = Boolean.FALSE;
+                            }
+                            else{
+                                WithFood = Boolean.TRUE;
+                            }
+                            //TODO:: 2D Array, With Possible Null Values
+                            String takenAtTime = parts[5].substring(2, parts[5].length()-2);
+                            String[] takenAtTemp = takenAtTime.split("], \\[");
+                            ArrayList<ArrayList<LocalTime>> TakenAt = new ArrayList<>();
+                            for (String times: takenAtTemp
+                            ) {
+                                String[] tempTimes = times.split(", ");
+                                ArrayList<LocalTime> tempLocalTimes = new ArrayList<>();
+                                for (String time: tempTimes
+                                     ) {
+                                    tempLocalTimes.add(LocalTime.parse(time));
+                                }
+                                TakenAt.add(tempLocalTimes);
+                            }
+                            SpecificDayMedication med;
+                            if (parts.length == 7){
+                                //TODO:: Previously Taken At
+                                med = new SpecificDayMedication(Name, strength, NumLeft, type, WithFood, TakenAt);
+                            }
+                            else{
+                                med = new SpecificDayMedication(Name, strength, NumLeft, type, WithFood, TakenAt);
+                            }
+                            newMed(med);
+                            break;
                         }
                         case 2:{
                             //TODO:: Weekly
