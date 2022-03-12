@@ -201,10 +201,62 @@ public class DataController {
                             break;
                         }
                         case 2:{
-                            //TODO:: Weekly
+                            String[] parts = line.split("/");
+                            String Name = parts[0];
+                            String strength = parts[1];
+                            int NumLeft = Integer.parseInt(parts[2]);
+                            String type = parts[3];
+                            Boolean WithFood;
+                            if (parts[4] == "0"){
+                                WithFood = Boolean.FALSE;
+                            }
+                            else{
+                                WithFood = Boolean.TRUE;
+                            }
+                            String takenAtTime = parts[5].substring(1, parts[5].length()-1);
+                            String[] takenAtTemp = takenAtTime.split(", ");
+                            ArrayList<LocalTime> TakenAt = new ArrayList<>();
+                            for (String time: takenAtTemp
+                            ) {
+                                TakenAt.add(LocalTime.parse(time));
+                            }
+                            String Day = parts[6];
+                            WeeklyMedication med;
+                            if (parts.length == 8){
+                                //TODO:: Previously Taken At
+                                med = new WeeklyMedication(Name, strength, NumLeft, type, WithFood, TakenAt, Day);
+                            }
+                            else{
+                                med = new WeeklyMedication(Name, strength, NumLeft, type, WithFood, TakenAt, Day);
+                            }
+                            newMed(med);
+                            break;
                         }
                         case 3:{
                             //TODO:: Monthly
+                            String[] parts = line.split("/");
+                            String Name = parts[0];
+                            String strength = parts[1];
+                            int NumLeft = Integer.parseInt(parts[2]);
+                            String type = parts[3];
+                            Boolean WithFood;
+                            if (parts[4] == "0"){
+                                WithFood = Boolean.FALSE;
+                            }
+                            else{
+                                WithFood = Boolean.TRUE;
+                            }
+                            int dayOfMonth = Integer.parseInt(parts[5]);
+                            MonthlyMedication med;
+                            if (parts.length == 8){
+                                //TODO:: Previously Taken At
+                                med = new MonthlyMedication(Name, strength, NumLeft, type, WithFood, dayOfMonth);
+                            }
+                            else{
+                                med = new MonthlyMedication(Name, strength, NumLeft, type, WithFood, dayOfMonth);
+                            }
+                            newMed(med);
+                            break;
                         }
                     }
                 }
