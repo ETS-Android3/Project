@@ -27,8 +27,8 @@ public class NotificationIntentService extends IntentService {
         Notification.Builder builder = new Notification.Builder(this, "My Notification");
         builder.setContentTitle("MedicationReminder");
         builder.setContentText("You have Medication(s) to take");
-        builder.setSmallIcon(R.drawable.ic_launcher_background);
-        Intent notifyIntent = new Intent(this, mainPage.class);
+        builder.setSmallIcon(R.drawable.ic_launcher_foreground);
+        Intent notifyIntent = new Intent(this, loginNotification.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, NOTIFICATION_ID, notifyIntent, PendingIntent.FLAG_IMMUTABLE);
         builder.setContentIntent(pendingIntent);
         Notification notificationCompat = builder.build();

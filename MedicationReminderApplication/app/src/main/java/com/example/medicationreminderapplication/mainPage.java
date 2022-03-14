@@ -204,7 +204,8 @@ public class mainPage extends AppCompatActivity {
                     }
 
                 }
-                if (allFull) { dialog.dismiss();}
+                if (allFull) { dialog.dismiss();
+                    CheckNextNotif();}
                 return false;
             }
         });
@@ -297,7 +298,8 @@ public class mainPage extends AppCompatActivity {
                     }
 
                 }
-                if (allFull) { dialog.dismiss();}
+                if (allFull) { dialog.dismiss();
+                    CheckNextNotif();}
                 return false;
             }
         });
