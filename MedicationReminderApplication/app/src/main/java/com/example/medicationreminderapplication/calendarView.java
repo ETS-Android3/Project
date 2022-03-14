@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.CalendarView;
+import android.widget.DatePicker;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,11 +18,12 @@ public class calendarView extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar_view);
-        CalendarView calendarView = findViewById(R.id.calendarView);
+
+        DatePicker calendarView = findViewById(R.id.calendarView);
         calendarView.setMaxDate(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+        calendarView.setOnDateChangedListener(new DatePicker.OnDateChangedListener() {
             @Override
-            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+            public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 
             }
         });
