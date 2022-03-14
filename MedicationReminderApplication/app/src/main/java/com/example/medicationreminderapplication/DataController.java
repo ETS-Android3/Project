@@ -51,8 +51,8 @@ public class DataController {
     private LocalTime Bedtime;
     private static DataController instance = null;
     static ArrayList<Medication> MedicationList;
-    private LocalDateTime nextMedDateTime = null;
-    private ArrayList<Medication> nextMedList = null;
+    private LocalDateTime nextMedDateTime;
+    private ArrayList<Medication> nextMedList;
     Context context;
 
 //Creates an instance of the Data controller and starts data reading
@@ -71,6 +71,8 @@ public class DataController {
         this.context = context;
         //Instantiate Medication list
         MedicationList = new ArrayList<Medication>();
+        nextMedDateTime = LocalDateTime.MAX;
+        nextMedList = new ArrayList<>();
         //Instantiate request queue
         reqQueue = requestQueue;
         reqQueue.start();
@@ -131,7 +133,8 @@ public class DataController {
                             for (String medCombo: meds
                                  ) {
                                 int index = medIndex(medCombo);
-                                nextMedList.add(MedicationList.get(index));
+                                if (index!= -1){
+                                nextMedList.add(MedicationList.get(index));}
                             }
                             break;
                         }
@@ -421,6 +424,10 @@ public class DataController {
         try {
             String mainKeyAlis = MasterKeys.getOrCreate(keyGenParameterSpec);
             String fileToWrite = "MedicationInfo.txt";
+            File file = new File(context.getFilesDir(), fileToWrite);
+            if (file.exists()){
+                file.delete();
+            }
             EncryptedFile encryptedFile = new EncryptedFile.Builder(
                     new File(context.getFilesDir(),fileToWrite),
                     context,
@@ -587,10 +594,14 @@ public class DataController {
 //Get MedicationIndex from name/strength combo
     int medIndex(String medNameStr){
         for (int index = 0; index<MedicationList.size(); index++){
-            if (MedicationList.get(index).toString()==medNameStr){
+            if (MedicationList.get(index).toString().equals(medNameStr)){
                 return index;
             }
         }
         return -1;
+    }
+//Adds a taken Time for a medication
+    void medTaken(Medication medication, LocalDateTime localDateTime){
+
     }
 }
