@@ -602,6 +602,8 @@ public class DataController {
     }
 //Adds a taken Time for a medication
     void medTaken(Medication medication, LocalDateTime localDateTime){
-
+        int index = medIndex(medication.toString());
+        MedicationList.get(index).prevTakenAt.put(localDateTime.toString(), Boolean.TRUE);
+        writeToFile();
     }
 }

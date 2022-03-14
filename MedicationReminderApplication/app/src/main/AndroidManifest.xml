@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MedicationReminderApplication.NoActionBar">
         <activity
+            android:name=".calendarView"
+            android:exported="true" />
+        <activity
             android:name=".nextMeds"
             android:exported="false" />
         <activity

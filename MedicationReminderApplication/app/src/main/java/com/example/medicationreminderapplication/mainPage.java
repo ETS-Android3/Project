@@ -110,6 +110,10 @@ public class mainPage extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void onCalendarClick(View view){
+        Intent intent = new Intent(mainPage.this, calendarView.class);
+        startActivity(intent);
+    }
 //Open New med popup without pre-submitting information
     @SuppressLint("ClickableViewAccessibility")
     void OpenNewMedsPopup(){
@@ -348,6 +352,5 @@ public class mainPage extends AppCompatActivity {
             return 3;
         }
     }
-
 
 }
