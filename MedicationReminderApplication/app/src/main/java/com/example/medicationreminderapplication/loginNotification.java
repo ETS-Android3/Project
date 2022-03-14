@@ -23,7 +23,7 @@ public class loginNotification extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(LOCK_REQUEST_CODE == requestCode){
             if (resultCode == RESULT_OK) {
-                Intent intent = new Intent(loginNotification.this, mainPage.class);
+                Intent intent = new Intent(loginNotification.this, nextMeds.class);
                 startActivity(intent);
             } else {
                 //Authentication failed
