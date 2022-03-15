@@ -437,6 +437,7 @@ public class DataController {
             String fileString = "";
             for (Medication med: MedicationList
                  ) {
+                Log.e("MED",med.prevTakenAt.toString());
                 if (med instanceof EveryXDaysMedication){
                     fileString = fileString.concat("EveryXDay\n");
                     fileString = fileString.concat(med.name);
