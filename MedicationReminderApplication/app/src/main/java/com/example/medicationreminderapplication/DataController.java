@@ -607,4 +607,21 @@ public class DataController {
         MedicationList.get(index).prevTakenAt.put(localDateTime.toString(), Boolean.TRUE);
         writeToFile();
     }
+
+//Get all medications taken on a specified day
+    ArrayList<Medication> medicationsOn(int year, int month, int day){
+        ArrayList<Medication> meds = new ArrayList<>();
+        for (Medication med: MedicationList
+             ) {
+            try{
+                if (med.prevTakenAt.get(LocalDate.of(year,month,day).toString())){
+                    meds.add(med);
+                }
+            }
+            catch (Exception e){
+
+            }
+        }
+        return meds;
+    }
 }
