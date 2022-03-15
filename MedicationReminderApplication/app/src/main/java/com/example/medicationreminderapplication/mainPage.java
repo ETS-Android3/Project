@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -170,8 +171,8 @@ public class mainPage extends AppCompatActivity {
                                 RecyclerView recycler = byXDays.findViewById(R.id.recyclerByWeekTimes);
                                 RecyclerViewAdapter timeRVA = (RecyclerViewAdapter) recycler.getAdapter();
 
-                                EditText dateText = byXDays.findViewById(R.id.editTextDate);
-                                LocalDate date = LocalDate.now(); // TODO:: Parse from dateText
+                                DatePicker dateText = byXDays.findViewById(R.id.datePicker);
+                                LocalDate date = LocalDate.of(dateText.getYear(), dateText.getMonth(), dateText.getDayOfMonth());
                                 //Add data to data controller
                                 newMed = new EveryXDaysMedication(name, dosage, quantity, type, Boolean.TRUE, timeRVA.mTimes, numOfDays, date);
                                 dc.newMed(newMed);
@@ -281,7 +282,35 @@ public class mainPage extends AppCompatActivity {
                 String type = typeDropDown.getSelectedItem().toString();
                 switch (tabLayout.getSelectedTabPosition()){
                     case 0:{
+                        ViewPager2 byXDays = (ViewPager2) vp.findViewById(R.id.viewPagerByDays);
+                        TabLayout byDaysTabs = (TabLayout) vp.findViewById(R.id.tabsDays);
+                        switch (byDaysTabs.getSelectedTabPosition()){
+                            case 0:{
+                                //Get days
+                                EditText dayText = byXDays.findViewById(R.id.editTextNumberOfDays);
+                                int numOfDays = Integer.parseInt(dayText.getText().toString());
+                                //Get times
+                                RecyclerView recycler = byXDays.findViewById(R.id.recyclerByWeekTimes);
+                                RecyclerViewAdapter timeRVA = (RecyclerViewAdapter) recycler.getAdapter();
 
+                                DatePicker dateText = byXDays.findViewById(R.id.datePicker);
+                                LocalDate date = LocalDate.of(dateText.getYear(), dateText.getMonth(), dateText.getDayOfMonth());
+                                //Add data to data controller
+                                newMed = new EveryXDaysMedication(name, dosage, quantity, type, Boolean.TRUE, timeRVA.mTimes, numOfDays, date);
+                                dc.newMed(newMed);
+                                break;
+                            }
+                            case 1:{
+                                //Get times
+                                RecyclerView recyclerBySpecificDay = byXDays.findViewById(R.id.recyclerBySpecificDay);
+                                TimesRecyclerViewAdapter timeRVA = (TimesRecyclerViewAdapter) recyclerBySpecificDay.getAdapter();
+                                ArrayList<ArrayList<LocalTime>> times = timeRVA.mTimes;
+                                //Add data to data controller
+                                newMed = new SpecificDayMedication(name, dosage, quantity, type, Boolean.TRUE, times);
+                                dc.newMed(newMed);
+                            }
+                        }
+                        break;
                     }
                     case 1:{
                         Spinner daysSpinner = (Spinner) vp.findViewById(R.id.spinnerDayOfWeek);

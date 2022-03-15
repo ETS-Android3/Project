@@ -10,10 +10,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 
 
@@ -30,7 +33,8 @@ public class ByXDays extends Fragment {
         View root = inflater.inflate(R.layout.fragment_by_x_days, container, false);
         RecyclerView recyclerView = root.findViewById(R.id.recyclerByWeekTimes);
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(getContext(), new ArrayList<LocalTime>());
-
+        DatePicker datePicker = root.findViewById(R.id.datePicker);
+        datePicker.setMaxDate(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         FloatingActionButton addButton = root.findViewById(R.id.btnAddTime2);

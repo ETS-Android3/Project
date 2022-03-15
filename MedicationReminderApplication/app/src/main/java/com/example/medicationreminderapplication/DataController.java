@@ -105,6 +105,7 @@ public class DataController {
 
             byte[] plaintext = byteArrayOutputStream.toByteArray();
             String fileContent = new String(plaintext, StandardCharsets.UTF_8);
+            Log.e("FILE", fileContent);
             String[] lines = fileContent.split("\n");
             int currentMedType = 0;
             for (String line: lines

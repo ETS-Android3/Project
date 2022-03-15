@@ -16,14 +16,21 @@ import java.util.ArrayList;
 public class Medication_list extends AppCompatActivity {
 
     DataController dc;
+    MedicationRecyclerViewAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_medication_list);
         dc = DataController.getInstance();
         RecyclerView recyclerView = findViewById(R.id.recyclerMedicationList);
-        MedicationRecyclerViewAdapter adapter = new MedicationRecyclerViewAdapter(this, dc.medications());
+        adapter = new MedicationRecyclerViewAdapter(this, dc.medications());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
     }
 }
