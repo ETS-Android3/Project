@@ -44,11 +44,6 @@ import javax.net.ssl.HttpsURLConnection;
 public class DataController {
 
     private static RequestQueue reqQueue;
-    private LocalTime WakeUp;
-    private LocalTime Breakfast;
-    private LocalTime Lunch;
-    private LocalTime Dinner;
-    private LocalTime Bedtime;
     private static DataController instance = null;
     static ArrayList<Medication> MedicationList;
     private LocalDateTime nextMedDateTime;
@@ -105,171 +100,188 @@ public class DataController {
 
             byte[] plaintext = byteArrayOutputStream.toByteArray();
             String fileContent = new String(plaintext, StandardCharsets.UTF_8);
-            Log.e("FILE", fileContent);
             String[] lines = fileContent.split("\n");
             int currentMedType = 0;
             for (String line: lines
                  ) {
-                if (line.equals("EveryXDay")){
-                    currentMedType = 0;
-                }
-                else if (line.equals("SpecificDay")){
-                    currentMedType = 1;
-                }
-                else if (line.equals("Weekly")){
-                    currentMedType = 2;
-                }
-                else if (line.equals("Monthly")){
-                    currentMedType = 3;
-                }
-                else if (line.equals("NEXTMEDS")){
-                    currentMedType = -1;
-                }
-                else{
-                    switch (currentMedType){
-                        case -1:{
-                            //TODO:: NEXT MEDS
-                            String[] meds = line.split("/");
-                            nextMedList.clear();
-                            for (String medCombo: meds
-                                 ) {
-                                int index = medIndex(medCombo);
-                                if (index!= -1){
-                                nextMedList.add(MedicationList.get(index));}
-                            }
-                            break;
-                        }
-                        case 0:{
-                            String[] parts = line.split("/");
-                            String Name = parts[0];
-                            String strength = parts[1];
-                            int NumLeft = Integer.parseInt(parts[2]);
-                            String type = parts[3];
-                            Boolean WithFood;
-                            if (parts[4] == "0"){
-                                WithFood = Boolean.FALSE;
-                            }
-                            else{
-                                WithFood = Boolean.TRUE;
-                            }
-                            String takenAtTime = parts[5].substring(1, parts[5].length()-1);
-                            String[] takenAtTemp = takenAtTime.split(", ");
-                            ArrayList<LocalTime> TakenAt = new ArrayList<>();
-                            for (String time: takenAtTemp
-                                 ) {
-                                if (time.length()!=0){
-                                TakenAt.add(LocalTime.parse(time));}
-                            }
-                            int numOfDays = Integer.parseInt(parts[6]);
-                            LocalDate StartDate = LocalDate.parse(parts[7]);
-                            EveryXDaysMedication med;
-                            if (parts.length == 9){
-                                //TODO:: Previously Taken At
-                                med = new EveryXDaysMedication(Name, strength, NumLeft, type, WithFood, TakenAt, numOfDays, StartDate);
-                            }
-                            else{
-                                med = new EveryXDaysMedication(Name, strength, NumLeft, type, WithFood, TakenAt, numOfDays, StartDate);
-                            }
-                            newMed(med);
-                            break;
-                        }
-                        case 1:{
-                            //TODO:: Specific Day
-                            String[] parts = line.split("/");
-                            String Name = parts[0];
-                            String strength = parts[1];
-                            int NumLeft = Integer.parseInt(parts[2]);
-                            String type = parts[3];
-                            Boolean WithFood;
-                            if (parts[4] == "0"){
-                                WithFood = Boolean.FALSE;
-                            }
-                            else{
-                                WithFood = Boolean.TRUE;
-                            }
-                            //TODO:: 2D Array, With Possible Null Values
-                            String takenAtTime = parts[5].substring(2, parts[5].length()-2);
-                            String[] takenAtTemp = takenAtTime.split("], \\[");
-                            ArrayList<ArrayList<LocalTime>> TakenAt = new ArrayList<>();
-                            for (String times: takenAtTemp
-                            ) {
-                                String[] tempTimes = times.split(", ");
-                                ArrayList<LocalTime> tempLocalTimes = new ArrayList<>();
-                                for (String time: tempTimes
-                                     ) {
-                                    tempLocalTimes.add(LocalTime.parse(time));
+                switch (line) {
+                    case "EveryXDay":
+                        currentMedType = 0;
+                        break;
+                    case "SpecificDay":
+                        currentMedType = 1;
+                        break;
+                    case "Weekly":
+                        currentMedType = 2;
+                        break;
+                    case "Monthly":
+                        currentMedType = 3;
+                        break;
+                    case "NEXTMEDS":
+                        currentMedType = -1;
+                        break;
+                    default:
+                        switch (currentMedType) {
+                            case -1: {
+                                String[] meds = line.split("/");
+                                nextMedList.clear();
+                                for (String medCombo : meds
+                                ) {
+                                    int index = medIndex(medCombo);
+                                    if (index != -1) {
+                                        nextMedList.add(MedicationList.get(index));
+                                    }
                                 }
-                                TakenAt.add(tempLocalTimes);
+                                break;
                             }
-                            SpecificDayMedication med;
-                            if (parts.length == 7){
-                                //TODO:: Previously Taken At
-                                med = new SpecificDayMedication(Name, strength, NumLeft, type, WithFood, TakenAt);
+                            case 0: {
+                                String[] parts = line.split("/");
+                                String Name = parts[0];
+                                String strength = parts[1];
+                                int NumLeft = Integer.parseInt(parts[2]);
+                                String type = parts[3];
+                                Boolean WithFood;
+                                if (parts[4].equals("0")) {
+                                    WithFood = Boolean.FALSE;
+                                } else {
+                                    WithFood = Boolean.TRUE;
+                                }
+                                String takenAtTime = parts[5].substring(1, parts[5].length() - 1);
+                                String[] takenAtTemp = takenAtTime.split(", ");
+                                ArrayList<LocalTime> TakenAt = new ArrayList<>();
+                                for (String time : takenAtTemp
+                                ) {
+                                    if (time.length() != 0) {
+                                        TakenAt.add(LocalTime.parse(time));
+                                    }
+                                }
+                                int numOfDays = Integer.parseInt(parts[6]);
+                                LocalDate StartDate = LocalDate.parse(parts[7]);
+                                EveryXDaysMedication med;
+                                if (parts.length == 9) {
+                                    HashMap<String, Boolean> prevTakenAt = new HashMap<>();
+                                    String[] keyValuePairs = parts[8].substring(1, parts[8].length() - 1).split(",");
+                                    for (String keyValuePair : keyValuePairs
+                                    ) {
+                                        String[] pair = keyValuePair.split("=");
+                                        prevTakenAt.put(pair[0].replace(" ", ""), Boolean.valueOf(pair[1]));
+                                    }
+
+                                    med = new EveryXDaysMedication(Name, strength, NumLeft, type, WithFood, TakenAt, numOfDays, StartDate, prevTakenAt);
+                                } else {
+                                    med = new EveryXDaysMedication(Name, strength, NumLeft, type, WithFood, TakenAt, numOfDays, StartDate);
+                                }
+                                newMed(med);
+                                break;
                             }
-                            else{
-                                med = new SpecificDayMedication(Name, strength, NumLeft, type, WithFood, TakenAt);
+                            case 1: {
+                                String[] parts = line.split("/");
+                                String Name = parts[0];
+                                String strength = parts[1];
+                                int NumLeft = Integer.parseInt(parts[2]);
+                                String type = parts[3];
+                                Boolean WithFood;
+                                if (parts[4] == "0") {
+                                    WithFood = Boolean.FALSE;
+                                } else {
+                                    WithFood = Boolean.TRUE;
+                                }
+                                String takenAtTime = parts[5].substring(2, parts[5].length() - 2);
+                                String[] takenAtTemp = takenAtTime.split("], \\[");
+                                ArrayList<ArrayList<LocalTime>> TakenAt = new ArrayList<>();
+                                for (String times : takenAtTemp
+                                ) {
+                                    String[] tempTimes = times.split(", ");
+                                    ArrayList<LocalTime> tempLocalTimes = new ArrayList<>();
+                                    for (String time : tempTimes
+                                    ) {
+                                        tempLocalTimes.add(LocalTime.parse(time));
+                                    }
+                                    TakenAt.add(tempLocalTimes);
+                                }
+                                SpecificDayMedication med;
+                                if (parts.length == 7) {
+                                    HashMap<String, Boolean> prevTakenAt = new HashMap<>();
+                                    String[] keyValuePairs = parts[6].substring(1, parts[6].length() - 1).split(",");
+                                    for (String keyValuePair : keyValuePairs
+                                    ) {
+                                        String[] pair = keyValuePair.split("=");
+                                        prevTakenAt.put(pair[0].replace(" ", ""), Boolean.valueOf(pair[1]));
+                                    }
+                                    med = new SpecificDayMedication(Name, strength, NumLeft, type, WithFood, TakenAt, prevTakenAt);
+                                } else {
+                                    med = new SpecificDayMedication(Name, strength, NumLeft, type, WithFood, TakenAt);
+                                }
+                                newMed(med);
+                                break;
                             }
-                            newMed(med);
-                            break;
+                            case 2: {
+                                String[] parts = line.split("/");
+                                String Name = parts[0];
+                                String strength = parts[1];
+                                int NumLeft = Integer.parseInt(parts[2]);
+                                String type = parts[3];
+                                Boolean WithFood;
+                                if (parts[4] == "0") {
+                                    WithFood = Boolean.FALSE;
+                                } else {
+                                    WithFood = Boolean.TRUE;
+                                }
+                                String takenAtTime = parts[5].substring(1, parts[5].length() - 1);
+                                String[] takenAtTemp = takenAtTime.split(", ");
+                                ArrayList<LocalTime> TakenAt = new ArrayList<>();
+                                for (String time : takenAtTemp
+                                ) {
+                                    TakenAt.add(LocalTime.parse(time));
+                                }
+                                String Day = parts[6];
+                                WeeklyMedication med;
+                                if (parts.length == 8) {
+                                    HashMap<String, Boolean> prevTakenAt = new HashMap<>();
+                                    String[] keyValuePairs = parts[7].substring(1, parts[7].length() - 1).split(",");
+                                    for (String keyValuePair : keyValuePairs
+                                    ) {
+                                        String[] pair = keyValuePair.split("=");
+                                        prevTakenAt.put(pair[0].replace(" ", ""), Boolean.valueOf(pair[1]));
+                                    }
+                                    med = new WeeklyMedication(Name, strength, NumLeft, type, WithFood, TakenAt, Day, prevTakenAt);
+                                } else {
+                                    med = new WeeklyMedication(Name, strength, NumLeft, type, WithFood, TakenAt, Day);
+                                }
+                                newMed(med);
+                                break;
+                            }
+                            case 3: {
+                                String[] parts = line.split("/");
+                                String Name = parts[0];
+                                String strength = parts[1];
+                                int NumLeft = Integer.parseInt(parts[2]);
+                                String type = parts[3];
+                                Boolean WithFood;
+                                if (parts[4] == "0") {
+                                    WithFood = Boolean.FALSE;
+                                } else {
+                                    WithFood = Boolean.TRUE;
+                                }
+                                int dayOfMonth = Integer.parseInt(parts[5]);
+                                MonthlyMedication med;
+                                if (parts.length == 8) {
+                                    HashMap<String, Boolean> prevTakenAt = new HashMap<>();
+                                    String[] keyValuePairs = parts[7].substring(1, parts[7].length() - 1).split(",");
+                                    for (String keyValuePair : keyValuePairs
+                                    ) {
+                                        String[] pair = keyValuePair.split("=");
+                                        prevTakenAt.put(pair[0].replace(" ", ""), Boolean.valueOf(pair[1]));
+                                    }
+                                    med = new MonthlyMedication(Name, strength, NumLeft, type, WithFood, dayOfMonth, prevTakenAt);
+                                } else {
+                                    med = new MonthlyMedication(Name, strength, NumLeft, type, WithFood, dayOfMonth);
+                                }
+                                newMed(med);
+                                break;
+                            }
                         }
-                        case 2:{
-                            String[] parts = line.split("/");
-                            String Name = parts[0];
-                            String strength = parts[1];
-                            int NumLeft = Integer.parseInt(parts[2]);
-                            String type = parts[3];
-                            Boolean WithFood;
-                            if (parts[4] == "0"){
-                                WithFood = Boolean.FALSE;
-                            }
-                            else{
-                                WithFood = Boolean.TRUE;
-                            }
-                            String takenAtTime = parts[5].substring(1, parts[5].length()-1);
-                            String[] takenAtTemp = takenAtTime.split(", ");
-                            ArrayList<LocalTime> TakenAt = new ArrayList<>();
-                            for (String time: takenAtTemp
-                            ) {
-                                TakenAt.add(LocalTime.parse(time));
-                            }
-                            String Day = parts[6];
-                            WeeklyMedication med;
-                            if (parts.length == 8){
-                                //TODO:: Previously Taken At
-                                med = new WeeklyMedication(Name, strength, NumLeft, type, WithFood, TakenAt, Day);
-                            }
-                            else{
-                                med = new WeeklyMedication(Name, strength, NumLeft, type, WithFood, TakenAt, Day);
-                            }
-                            newMed(med);
-                            break;
-                        }
-                        case 3:{
-                            String[] parts = line.split("/");
-                            String Name = parts[0];
-                            String strength = parts[1];
-                            int NumLeft = Integer.parseInt(parts[2]);
-                            String type = parts[3];
-                            Boolean WithFood;
-                            if (parts[4] == "0"){
-                                WithFood = Boolean.FALSE;
-                            }
-                            else{
-                                WithFood = Boolean.TRUE;
-                            }
-                            int dayOfMonth = Integer.parseInt(parts[5]);
-                            MonthlyMedication med;
-                            if (parts.length == 8){
-                                //TODO:: Previously Taken At
-                                med = new MonthlyMedication(Name, strength, NumLeft, type, WithFood, dayOfMonth);
-                            }
-                            else{
-                                med = new MonthlyMedication(Name, strength, NumLeft, type, WithFood, dayOfMonth);
-                            }
-                            newMed(med);
-                            break;
-                        }
-                    }
+                        break;
                 }
             }
         } catch (GeneralSecurityException e) {
@@ -437,7 +449,6 @@ public class DataController {
             String fileString = "";
             for (Medication med: MedicationList
                  ) {
-                Log.e("MED",med.prevTakenAt.toString());
                 if (med instanceof EveryXDaysMedication){
                     fileString = fileString.concat("EveryXDay\n");
                     fileString = fileString.concat(med.name);
@@ -605,7 +616,9 @@ public class DataController {
 //Adds a taken Time for a medication
     void medTaken(Medication medication, LocalDateTime localDateTime){
         int index = medIndex(medication.toString());
-        MedicationList.get(index).prevTakenAt.put(localDateTime.toString(), Boolean.TRUE);
+        Medication med = MedicationList.get(index);
+        med.prevTakenAt.put(localDateTime.toString(), Boolean.TRUE);
+        MedicationList.set(index, med);
         writeToFile();
     }
 
@@ -615,12 +628,14 @@ public class DataController {
         for (Medication med: MedicationList
              ) {
             try{
-                if (med.prevTakenAt.get(LocalDate.of(year,month,day).toString())){
-                    meds.add(med);
+                for (String key: med.prevTakenAt.keySet()
+                     ) {
+                    if (LocalDateTime.parse(key).toLocalDate().equals(LocalDate.of(year,month+1,day))){
+                        meds.add(med);
+                    }
                 }
             }
             catch (Exception ignored){
-
             }
         }
         return meds;
