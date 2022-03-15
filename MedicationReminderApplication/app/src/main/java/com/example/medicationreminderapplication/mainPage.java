@@ -156,8 +156,12 @@ public class mainPage extends AppCompatActivity {
                 Boolean allFull = Boolean.TRUE;
                 String name = nameText.getText().toString();
                 String dosage = dosageText.getText().toString();
-                int quantity = Integer.parseInt(quantityText.getText().toString());
+                String quantity = quantityText.getText().toString();
                 String type = typeDropDown.getSelectedItem().toString();
+                if (name.equals("") || dosage.equals("") || quantity.equals("")){
+                    allFull = Boolean.FALSE;
+                }
+                else{
                 switch (tabLayout.getSelectedTabPosition()){
                     case 0:{
                         ViewPager2 byXDays = (ViewPager2) vp.findViewById(R.id.viewPagerByDays);
@@ -166,16 +170,21 @@ public class mainPage extends AppCompatActivity {
                             case 0:{
                                 //Get days
                                 EditText dayText = byXDays.findViewById(R.id.editTextNumberOfDays);
-                                int numOfDays = Integer.parseInt(dayText.getText().toString());
+                                String numOfDays = dayText.getText().toString();
                                 //Get times
                                 RecyclerView recycler = byXDays.findViewById(R.id.recyclerByWeekTimes);
                                 RecyclerViewAdapter timeRVA = (RecyclerViewAdapter) recycler.getAdapter();
 
                                 DatePicker dateText = byXDays.findViewById(R.id.datePicker);
                                 LocalDate date = LocalDate.of(dateText.getYear(), dateText.getMonth(), dateText.getDayOfMonth());
-                                //Add data to data controller
-                                newMed = new EveryXDaysMedication(name, dosage, quantity, type, Boolean.TRUE, timeRVA.mTimes, numOfDays, date);
-                                dc.newMed(newMed);
+                                if (numOfDays.equals("")){
+                                    allFull = Boolean.FALSE;
+                                }
+                                else{
+                                    //Add data to data controller
+                                    newMed = new EveryXDaysMedication(name, dosage, Integer.parseInt(quantity), type, Boolean.TRUE, timeRVA.mTimes, Integer.parseInt(numOfDays), date);
+                                    dc.newMed(newMed);
+                                }
                                 break;
                             }
                             case 1:{
@@ -183,11 +192,24 @@ public class mainPage extends AppCompatActivity {
                                 RecyclerView recyclerBySpecificDay = byXDays.findViewById(R.id.recyclerBySpecificDay);
                                 TimesRecyclerViewAdapter timeRVA = (TimesRecyclerViewAdapter) recyclerBySpecificDay.getAdapter();
                                 ArrayList<ArrayList<LocalTime>> times = timeRVA.mTimes;
+                                for (ArrayList<LocalTime> time: times
+                                     ) {
+                                    if (!time.isEmpty()){
+                                        allFull = Boolean.TRUE;
+                                        break;
+                                    }
+                                    else{
+                                        allFull = Boolean.FALSE;
+                                        break;
+                                    }
+                                }
                                 //Add data to data controller
-                                newMed = new SpecificDayMedication(name, dosage, quantity, type, Boolean.TRUE, times);
+                                newMed = new SpecificDayMedication(name, dosage,Integer.parseInt(quantity), type, Boolean.TRUE, times);
                                 dc.newMed(newMed);
+                                break;
+                                }
+
                             }
-                        }
                         break;
                     }
                     case 1:{
@@ -196,21 +218,36 @@ public class mainPage extends AppCompatActivity {
                         RecyclerView timeRV = (RecyclerView)  vp.findViewById(R.id.recyclerByWeekTimes);
                         RecyclerViewAdapter timeRVA = (RecyclerViewAdapter)timeRV.getAdapter();
                         ArrayList<LocalTime> times = timeRVA.mTimes;
-                        newMed = new WeeklyMedication(name, dosage, quantity, type, Boolean.TRUE, times, day);
+                        if (times.isEmpty()){
+                            allFull = Boolean.FALSE;
+                        }
+                        else{
+                        newMed = new WeeklyMedication(name, dosage, Integer.parseInt(quantity), type, Boolean.TRUE, times, day);
                         dc.newMed(newMed);
+                        }
                         break;
+
                     }
                     case 2:{
                         EditText monthText = (EditText) vp.findViewById(R.id.editTextDayOfMonth);
-                        int month = Integer.parseInt(monthText.getText().toString());
-                        newMed = new MonthlyMedication(name, dosage, quantity, type, Boolean.TRUE, month);
+                        String month = monthText.getText().toString();
+                        if (month.equals("")){
+                            allFull = Boolean.FALSE;
+                        }
+                        else{
+                        newMed = new MonthlyMedication(name, dosage,Integer.parseInt(quantity), type, Boolean.TRUE, Integer.parseInt(month));
                         dc.newMed(newMed);
+                        }
                         break;
                     }
 
                 }
+                }
                 if (allFull) { dialog.dismiss();
                     CheckNextNotif();}
+                else{
+                    Toast.makeText(context, "Not all of the sections have been filled", Toast.LENGTH_LONG).show();
+                }
                 return false;
             }
         });

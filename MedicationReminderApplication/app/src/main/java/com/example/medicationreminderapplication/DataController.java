@@ -618,7 +618,7 @@ public class DataController {
                     meds.add(med);
                 }
             }
-            catch (Exception e){
+            catch (Exception ignored){
 
             }
         }
