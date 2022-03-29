@@ -176,7 +176,7 @@ public class mainPage extends AppCompatActivity {
                                 RecyclerViewAdapter timeRVA = (RecyclerViewAdapter) recycler.getAdapter();
 
                                 DatePicker dateText = byXDays.findViewById(R.id.datePicker);
-                                LocalDate date = LocalDate.of(dateText.getYear(), dateText.getMonth(), dateText.getDayOfMonth());
+                                LocalDate date = LocalDate.of(dateText.getYear(), dateText.getMonth()+1, dateText.getDayOfMonth());
                                 if (numOfDays.equals("")){
                                     allFull = Boolean.FALSE;
                                 }
@@ -331,7 +331,7 @@ public class mainPage extends AppCompatActivity {
                                 RecyclerViewAdapter timeRVA = (RecyclerViewAdapter) recycler.getAdapter();
 
                                 DatePicker dateText = byXDays.findViewById(R.id.datePicker);
-                                LocalDate date = LocalDate.of(dateText.getYear(), dateText.getMonth(), dateText.getDayOfMonth());
+                                LocalDate date = LocalDate.of(dateText.getYear(), dateText.getMonth()+1, dateText.getDayOfMonth());
                                 //Add data to data controller
                                 newMed = new EveryXDaysMedication(name, dosage, quantity, type, Boolean.TRUE, timeRVA.mTimes, numOfDays, date);
                                 dc.newMed(newMed);
@@ -381,7 +381,7 @@ public class mainPage extends AppCompatActivity {
         Intent notifyIntent = new Intent(this,MyBroadcastReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 2, notifyIntent,PendingIntent.FLAG_IMMUTABLE);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Long time = LocalDateTime.now().plusSeconds(10).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        Long time = nextDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent);
     }
 
