@@ -76,11 +76,6 @@ public class mainPage extends AppCompatActivity {
                 dc.fromAPI(gtin, new VolleyCallBack() {
                     @Override
                     public void onSuccess(JSONObject information) {
-                        try {
-                            Toast.makeText(context, information.getString("name"), Toast.LENGTH_SHORT).show();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
                         OpenNewMedsPopup(information);
                     }
 

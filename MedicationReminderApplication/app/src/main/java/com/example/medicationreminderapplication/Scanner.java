@@ -3,6 +3,7 @@ package com.example.medicationreminderapplication;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +25,7 @@ public class Scanner extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dc = DataController.getInstance();
+        Context context = this;
         setContentView(R.layout.activity_scanner);
         CodeScannerView scannerView = findViewById(R.id.scanner_view);
         mCodeScanner = new CodeScanner(this, scannerView);
@@ -37,21 +39,20 @@ public class Scanner extends AppCompatActivity {
                         Intent intent = new Intent(Scanner.this, mainPage.class);
                         String tempGTIN = result.getText(); //Get result from scanning
                         if (result.getBarcodeFormat().equals(BarcodeFormat.DATA_MATRIX)){ //If format is a data matrix, change format
-                            tempGTIN = tempGTIN.substring(3,17);
-                            Log.e("Code", result.getText());
-                            intent.putExtra("GTIN", tempGTIN);
+                            try{
+                                tempGTIN = tempGTIN.substring(3,17);
+                                Log.e("Code", result.getText());
+                                intent.putExtra("GTIN", tempGTIN);
+                            }
+                            catch (ArrayIndexOutOfBoundsException e){
+                                Toast.makeText(context, "Data Matrix doesn't contain enough data", Toast.LENGTH_LONG).show();
+                            }
                         }
                         else{ //If a barcode return the direct result
                             int length = tempGTIN.length();
-                            //TODO:: pad with zeroes if not long enough
-                            if (length!= 13 && length!= 14){
-
-                            }
                             intent.putExtra("GTIN", result.getText());
                         }
-
                         startActivity(intent);
-
                     }
                 });
             }
