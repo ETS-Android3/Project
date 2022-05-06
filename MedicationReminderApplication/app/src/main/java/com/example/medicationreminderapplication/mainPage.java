@@ -218,8 +218,8 @@ public class mainPage extends AppCompatActivity {
                                     //Add data to data controller
                                     newMed = new SpecificDayMedication(name, dosage, Integer.parseInt(quantity), type, Boolean.TRUE, times);
                                     dc.newMed(newMed);
-                                    break;
                                 }
+                                break;
                                 }
 
                             }
@@ -235,8 +235,9 @@ public class mainPage extends AppCompatActivity {
                             allFull = Boolean.FALSE;
                         }
                         else{
+                            if (allFull){
                         newMed = new WeeklyMedication(name, dosage, Integer.parseInt(quantity), type, Boolean.TRUE, times, day);
-                        dc.newMed(newMed);
+                        dc.newMed(newMed);}
                         }
                         break;
 
@@ -248,8 +249,9 @@ public class mainPage extends AppCompatActivity {
                             allFull = Boolean.FALSE;
                         }
                         else{
+                            if (allFull){
                         newMed = new MonthlyMedication(name, dosage,Integer.parseInt(quantity), type, Boolean.TRUE, Integer.parseInt(month));
-                        dc.newMed(newMed);
+                        dc.newMed(newMed);}
                         }
                         break;
                     }
@@ -404,6 +406,7 @@ public class mainPage extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Long time = nextDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+        Toast.makeText(context, "Alarm set for" + time.toString(), Toast.LENGTH_LONG).show();
     }
 
     class AdapterByWhich extends FragmentStateAdapter {
