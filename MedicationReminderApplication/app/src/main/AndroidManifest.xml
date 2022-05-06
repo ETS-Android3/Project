@@ -43,8 +43,7 @@
 
         <receiver
             android:name="MyBroadcastReceiver"
-            android:enabled="true"
-            android:exported="false" />
+            android:enabled="true" />
 
         <service
             android:name="NotificationIntentService"
