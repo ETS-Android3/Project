@@ -61,17 +61,18 @@ public class mainPage extends AppCompatActivity {
     AlertDialog dialog;
     Context context;
 
-    @RequiresApi(api = Build.VERSION_CODES.S)
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
         context = this;
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SCHEDULE_EXACT_ALARM) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.SCHEDULE_EXACT_ALARM},
-                    1);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.SCHEDULE_EXACT_ALARM) != PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.SCHEDULE_EXACT_ALARM},
+                        1);
+            }
 
         }
 
@@ -180,8 +181,8 @@ public class mainPage extends AppCompatActivity {
                                 //Get times
                                 RecyclerView recycler = byXDays.findViewById(R.id.recyclerByWeekTimes);
                                 RecyclerViewAdapter timeRVA = (RecyclerViewAdapter) recycler.getAdapter();
-                                ArrayList<LocalTime> timeArrayList = timeRVA.mTimes;
-                                if (timeArrayList.isEmpty()){
+                                ArrayList<LocalTime> times = timeRVA.mTimes;
+                                if (times.isEmpty()){
                                     allFull = Boolean.FALSE;
                                 }
                                 DatePicker dateText = byXDays.findViewById(R.id.datePicker);
@@ -192,7 +193,7 @@ public class mainPage extends AppCompatActivity {
                                 else{
                                     //Add data to data controller
                                     if (allFull){
-                                        newMed = new EveryXDaysMedication(name, dosage, Integer.parseInt(quantity), type, Boolean.TRUE, timeRVA.mTimes, Integer.parseInt(numOfDays), date);
+                                        newMed = new EveryXDaysMedication(name, dosage, Integer.parseInt(quantity), type, Boolean.TRUE, times, Integer.parseInt(numOfDays), date);
                                         dc.newMed(newMed);
                                     }
                                 }
@@ -236,8 +237,9 @@ public class mainPage extends AppCompatActivity {
                         }
                         else{
                             if (allFull){
-                        newMed = new WeeklyMedication(name, dosage, Integer.parseInt(quantity), type, Boolean.TRUE, times, day);
-                        dc.newMed(newMed);}
+                                newMed = new WeeklyMedication(name, dosage, Integer.parseInt(quantity), type, Boolean.TRUE, times, day);
+                                dc.newMed(newMed);
+                            }
                         }
                         break;
 
@@ -250,8 +252,9 @@ public class mainPage extends AppCompatActivity {
                         }
                         else{
                             if (allFull){
-                        newMed = new MonthlyMedication(name, dosage,Integer.parseInt(quantity), type, Boolean.TRUE, Integer.parseInt(month));
-                        dc.newMed(newMed);}
+                                newMed = new MonthlyMedication(name, dosage,Integer.parseInt(quantity), type, Boolean.TRUE, Integer.parseInt(month));
+                                dc.newMed(newMed);
+                            }
                         }
                         break;
                     }
@@ -330,69 +333,109 @@ public class mainPage extends AppCompatActivity {
                 Boolean allFull = Boolean.TRUE;
                 String name = nameText.getText().toString();
                 String dosage = dosageText.getText().toString();
-                int quantity = Integer.parseInt(quantityText.getText().toString());
+                String quantity = quantityText.getText().toString();
                 String type = typeDropDown.getSelectedItem().toString();
-                switch (tabLayout.getSelectedTabPosition()){
-                    case 0:{
-                        ViewPager2 byXDays = (ViewPager2) vp.findViewById(R.id.viewPagerByDays);
-                        TabLayout byDaysTabs = (TabLayout) vp.findViewById(R.id.tabsDays);
-                        switch (byDaysTabs.getSelectedTabPosition()){
-                            case 0:{
-                                //Get days
-                                EditText dayText = byXDays.findViewById(R.id.editTextNumberOfDays);
-                                int numOfDays = Integer.parseInt(dayText.getText().toString());
-                                //Get times
-                                RecyclerView recycler = byXDays.findViewById(R.id.recyclerByWeekTimes);
-                                RecyclerViewAdapter timeRVA = (RecyclerViewAdapter) recycler.getAdapter();
-
-                                DatePicker dateText = byXDays.findViewById(R.id.datePicker);
-                                LocalDate date = LocalDate.of(dateText.getYear(), dateText.getMonth()+1, dateText.getDayOfMonth());
-                                if (allFull) {
-                                    //Add data to data controller
-                                    newMed = new EveryXDaysMedication(name, dosage, quantity, type, Boolean.TRUE, timeRVA.mTimes, numOfDays, date);
-                                    dc.newMed(newMed);
+                if (name.equals("") || dosage.equals("") || quantity.equals("")){
+                    allFull = Boolean.FALSE;
+                }
+                else{
+                    switch (tabLayout.getSelectedTabPosition()){
+                        case 0:{
+                            ViewPager2 byXDays = (ViewPager2) vp.findViewById(R.id.viewPagerByDays);
+                            TabLayout byDaysTabs = (TabLayout) vp.findViewById(R.id.tabsDays);
+                            switch (byDaysTabs.getSelectedTabPosition()){
+                                case 0:{
+                                    //Get days
+                                    EditText dayText = byXDays.findViewById(R.id.editTextNumberOfDays);
+                                    String numOfDays = dayText.getText().toString();
+                                    //Get times
+                                    RecyclerView recycler = byXDays.findViewById(R.id.recyclerByWeekTimes);
+                                    RecyclerViewAdapter timeRVA = (RecyclerViewAdapter) recycler.getAdapter();
+                                    ArrayList<LocalTime> times = timeRVA.mTimes;
+                                    if (times.isEmpty()){
+                                        allFull = Boolean.FALSE;
+                                    }
+                                    DatePicker dateText = byXDays.findViewById(R.id.datePicker);
+                                    LocalDate date = LocalDate.of(dateText.getYear(), dateText.getMonth()+1, dateText.getDayOfMonth());
+                                    if (numOfDays.equals("")){
+                                        allFull = Boolean.FALSE;
+                                    }
+                                    else{
+                                        //Add data to data controller
+                                        if (allFull){
+                                            newMed = new EveryXDaysMedication(name, dosage, Integer.parseInt(quantity), type, Boolean.TRUE, times, Integer.parseInt(numOfDays), date);
+                                            dc.newMed(newMed);
+                                        }
+                                    }
+                                    break;
                                 }
-                                break;
+                                case 1:{
+                                    //Get times
+                                    RecyclerView recyclerBySpecificDay = byXDays.findViewById(R.id.recyclerBySpecificDay);
+                                    TimesRecyclerViewAdapter timeRVA = (TimesRecyclerViewAdapter) recyclerBySpecificDay.getAdapter();
+                                    ArrayList<ArrayList<LocalTime>> times = timeRVA.mTimes;
+                                    for (ArrayList<LocalTime> time: times
+                                    ) {
+                                        if (!time.isEmpty()){
+                                            allFull = Boolean.TRUE;
+                                            break;
+                                        }
+                                        else{
+                                            allFull = Boolean.FALSE;
+                                            break;
+                                        }
+                                    }
+                                    if (allFull) {
+                                        //Add data to data controller
+                                        newMed = new SpecificDayMedication(name, dosage, Integer.parseInt(quantity), type, Boolean.TRUE, times);
+                                        dc.newMed(newMed);
+                                    }
+                                    break;
+                                }
+
                             }
-                            case 1:{
-                                //Get times
-                                RecyclerView recyclerBySpecificDay = byXDays.findViewById(R.id.recyclerBySpecificDay);
-                                TimesRecyclerViewAdapter timeRVA = (TimesRecyclerViewAdapter) recyclerBySpecificDay.getAdapter();
-                                ArrayList<ArrayList<LocalTime>> times = timeRVA.mTimes;
+                            break;
+                        }
+                        case 1:{
+                            Spinner daysSpinner = (Spinner) vp.findViewById(R.id.spinnerDayOfWeek);
+                            String day = daysSpinner.getSelectedItem().toString();
+                            RecyclerView timeRV = (RecyclerView)  vp.findViewById(R.id.recyclerByWeekTimes);
+                            RecyclerViewAdapter timeRVA = (RecyclerViewAdapter)timeRV.getAdapter();
+                            ArrayList<LocalTime> times = timeRVA.mTimes;
+                            if (times.isEmpty()){
+                                allFull = Boolean.FALSE;
+                            }
+                            else{
                                 if (allFull){
-                                    //Add data to data controller
-                                    newMed = new SpecificDayMedication(name, dosage, quantity, type, Boolean.TRUE, times);
+                                    newMed = new WeeklyMedication(name, dosage, Integer.parseInt(quantity), type, Boolean.TRUE, times, day);
                                     dc.newMed(newMed);
                                 }
                             }
-                        }
-                        break;
-                    }
-                    case 1:{
-                        Spinner daysSpinner = (Spinner) vp.findViewById(R.id.spinnerDayOfWeek);
-                        String day = daysSpinner.getSelectedItem().toString();
-                        RecyclerView timeRV = (RecyclerView)  vp.findViewById(R.id.recyclerByWeekTimes);
-                        RecyclerViewAdapter timeRVA = (RecyclerViewAdapter)timeRV.getAdapter();
-                        ArrayList<LocalTime> times = timeRVA.mTimes;
-                        if (allFull){
-                            newMed = new WeeklyMedication(name, dosage, quantity, type, Boolean.TRUE, times, day);
-                            dc.newMed(newMed);
-                        }
-                        break;
-                    }
-                    case 2:{
-                        EditText monthText = (EditText) vp.findViewById(R.id.editTextDayOfMonth);
-                        int month = Integer.parseInt(monthText.getText().toString());
-                        if (allFull){
-                            newMed = new MonthlyMedication(name, dosage, quantity, type, Boolean.TRUE, month);
-                            dc.newMed(newMed);
-                        }
-                        break;
-                    }
+                            break;
 
+                        }
+                        case 2:{
+                            EditText monthText = (EditText) vp.findViewById(R.id.editTextDayOfMonth);
+                            String month = monthText.getText().toString();
+                            if (month.equals("")){
+                                allFull = Boolean.FALSE;
+                            }
+                            else{
+                                if (allFull){
+                                    newMed = new MonthlyMedication(name, dosage,Integer.parseInt(quantity), type, Boolean.TRUE, Integer.parseInt(month));
+                                    dc.newMed(newMed);
+                                }
+                            }
+                            break;
+                        }
+
+                    }
                 }
                 if (allFull) { dialog.dismiss();
                     CheckNextNotif();}
+                else{
+                    Toast.makeText(context, "Not all of the sections have been filled", Toast.LENGTH_LONG).show();
+                }
                 return false;
             }
         });
@@ -400,14 +443,16 @@ public class mainPage extends AppCompatActivity {
     }
 
     public void CheckNextNotif(){
+        dc.NextMeds();
         LocalDateTime nextDateTime = dc.getNextMedDateTime();
         Intent notifyIntent = new Intent(this,MyBroadcastReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 2, notifyIntent,PendingIntent.FLAG_IMMUTABLE);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Log.e("ndt", nextDateTime.toString());
+        ArrayList<Medication> meds = dc.medications();
+        Medication med = meds.get(0);
         Long time = nextDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent);
-        //if (alarmManager.canScheduleExactAlarms()){
-//        Toast.makeText(context, "Alarm set for" + time.toString(), Toast.LENGTH_LONG).show();}
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent);
     }
 
     class AdapterByWhich extends FragmentStateAdapter {
