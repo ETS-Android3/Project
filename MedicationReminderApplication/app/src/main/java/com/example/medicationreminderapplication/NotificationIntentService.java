@@ -5,21 +5,32 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Intent;
+import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationManagerCompat;
 
-public class NotificationIntentService extends IntentService {
+public class NotificationIntentService extends Service {
     private static final int NOTIFICATION_ID = 2;
 
 
-    public NotificationIntentService() {
-        super("NotificationIntentService");
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId){
+        DoNotify();
+        return Service.START_STICKY;
     }
 
+
+
+    @Nullable
     @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    private void DoNotify() {
         NotificationChannel channel = new NotificationChannel("My Notification", "My Notification", NotificationManager.IMPORTANCE_HIGH);
         NotificationManager manager = getSystemService(NotificationManager.class);
         manager.createNotificationChannel(channel);
