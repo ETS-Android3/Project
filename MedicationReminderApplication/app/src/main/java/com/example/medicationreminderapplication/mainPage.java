@@ -406,7 +406,8 @@ public class mainPage extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Long time = nextDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent);
-        Toast.makeText(context, "Alarm set for" + time.toString(), Toast.LENGTH_LONG).show();
+        if (alarmManager.canScheduleExactAlarms()){
+        Toast.makeText(context, "Alarm set for" + time.toString(), Toast.LENGTH_LONG).show();}
     }
 
     class AdapterByWhich extends FragmentStateAdapter {
