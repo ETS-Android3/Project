@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationManagerCompat;
 
 public class NotificationIntentService extends IntentService {
-    private static final int NOTIFICATION_ID = 3;
+    private static final int NOTIFICATION_ID = 2;
 
 
     public NotificationIntentService() {
