@@ -42,12 +42,12 @@
         </activity>
 
         <receiver
-            android:name=".MyBroadcastReceiver"
+            android:name="MyBroadcastReceiver"
             android:enabled="true"
             android:exported="false" />
 
         <service
-            android:name=".NotificationIntentService"
+            android:name="NotificationIntentService"
             android:exported="false" />
     </application>
 

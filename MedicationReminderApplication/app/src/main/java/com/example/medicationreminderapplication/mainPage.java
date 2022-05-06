@@ -1,6 +1,7 @@
 package com.example.medicationreminderapplication;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -20,6 +21,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
@@ -59,6 +61,7 @@ public class mainPage extends AppCompatActivity {
     AlertDialog dialog;
     Context context;
 
+    @RequiresApi(api = Build.VERSION_CODES.S)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -397,7 +400,7 @@ public class mainPage extends AppCompatActivity {
     public void CheckNextNotif(){
         LocalDateTime nextDateTime = dc.getNextMedDateTime();
         Intent notifyIntent = new Intent(this,MyBroadcastReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 2, notifyIntent,PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 2, notifyIntent,PendingIntent.FLAG_IMMUTABLE);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Long time = nextDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent);
