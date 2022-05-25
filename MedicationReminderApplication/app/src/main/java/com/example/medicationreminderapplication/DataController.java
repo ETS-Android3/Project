@@ -80,6 +80,7 @@ public class DataController {
 
             byte[] plaintext = byteArrayOutputStream.toByteArray();
             String fileContent = new String(plaintext, StandardCharsets.UTF_8);
+            Log.e("FIF", fileContent);
             String[] lines = fileContent.split("\n");
             int currentMedType = 0;
             for (String line: lines
@@ -151,7 +152,7 @@ public class DataController {
                                 } else {
                                     med = new EveryXDaysMedication(Name, strength, NumLeft, type, WithFood, TakenAt, numOfDays, StartDate);
                                 }
-                                newMed(med);
+                                newMedFromFile(med);
                                 break;
                             }
                             case 1: {
@@ -192,7 +193,7 @@ public class DataController {
                                 } else {
                                     med = new SpecificDayMedication(Name, strength, NumLeft, type, WithFood, TakenAt);
                                 }
-                                newMed(med);
+                                newMedFromFile(med);
                                 break;
                             }
                             case 2: {
@@ -228,7 +229,7 @@ public class DataController {
                                 } else {
                                     med = new WeeklyMedication(Name, strength, NumLeft, type, WithFood, TakenAt, Day);
                                 }
-                                newMed(med);
+                                newMedFromFile(med);
                                 break;
                             }
                             case 3: {
@@ -257,7 +258,7 @@ public class DataController {
                                 } else {
                                     med = new MonthlyMedication(Name, strength, NumLeft, type, WithFood, dayOfMonth);
                                 }
-                                newMed(med);
+                                newMedFromFile(med);
                                 break;
                             }
                         }
@@ -273,7 +274,7 @@ public class DataController {
 //Checks for which medications are meant to be taken next
     void NextMeds(){
         //Get current time
-        LocalDateTime current = LocalDateTime.now();
+        LocalDateTime current = LocalDateTime.now().plusMinutes(1);
         //Check Daily Medications
         LocalDate nextDate = LocalDate.MAX;
         ArrayList<Medication> nextMonthlyMeds = new ArrayList<>();
@@ -290,7 +291,7 @@ public class DataController {
                     while (previousDateTime.isBefore(current)){
                         previousDateTime = previousDateTime.plusDays(((EveryXDaysMedication) med).numberOfDays);
                     }
-
+                    Log.e(previousDateTime.toString(), "");
                     if (previousDateTime.toLocalDate().isBefore(nextDate)){
                         nextMeds.clear();
                         nextMonthlyMeds.clear();
@@ -400,6 +401,7 @@ public class DataController {
         nextMeds.addAll(nextMonthlyMeds);
         nextMedList=nextMeds;
         nextMedDateTime = nextDateTime;
+        Log.e("nextMeds", nextMedList.toString());
         writeToFile();
     }
 
@@ -535,6 +537,7 @@ public class DataController {
                 fileString = fileString.concat(med.toString());
                 fileString = fileString.concat("/");
             }
+            Log.e("1",String.valueOf(nextMedList.size()));
             byte[] fileContent = fileString.getBytes(StandardCharsets.UTF_8);
             OutputStream outputStream = encryptedFile.openFileOutput();
             outputStream.write(fileContent);
@@ -552,6 +555,13 @@ public class DataController {
         if (index==-1){MedicationList.add(med);}
         else {MedicationList.get(index).numLeft += med.numLeft;}
         NextMeds();
+        writeToFile();
+    }
+//New Med from read
+    void newMedFromFile(Medication med){
+        int index = medIndex(med.toString());
+        if (index==-1){MedicationList.add(med);}
+        else {MedicationList.get(index).numLeft += med.numLeft;}
         writeToFile();
     }
 //Get medication information from API
@@ -599,6 +609,7 @@ public class DataController {
         Medication med = MedicationList.get(index);
         med.prevTakenAt.put(localDateTime.toString(), Boolean.TRUE);
         MedicationList.set(index, med);
+        NextMeds();
         writeToFile();
     }
 

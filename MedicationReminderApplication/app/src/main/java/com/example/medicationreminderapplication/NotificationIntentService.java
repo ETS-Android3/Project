@@ -35,6 +35,7 @@ public class NotificationIntentService extends Service {
         Intent notifyIntent = new Intent(this, loginNotification.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, NOTIFICATION_ID, notifyIntent, PendingIntent.FLAG_IMMUTABLE);
         builder.setContentIntent(pendingIntent);
+        builder.setAutoCancel(true);
         Notification notificationCompat = builder.build();
         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
         managerCompat.notify(NOTIFICATION_ID, notificationCompat);
