@@ -1,21 +1,14 @@
 package com.example.medicationreminderapplication;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.CalendarView;
 import android.widget.DatePicker;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Calendar;
 
 public class calendarView extends AppCompatActivity {
     AlertDialog.Builder dialogBuilder;

@@ -1,22 +1,16 @@
 package com.example.medicationreminderapplication;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
 import com.google.zxing.BarcodeFormat;
-
-import java.util.ArrayList;
-
 
 public class Scanner extends AppCompatActivity {
     private CodeScanner mCodeScanner;

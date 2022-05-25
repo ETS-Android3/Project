@@ -1,5 +1,4 @@
 package com.example.medicationreminderapplication;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
@@ -13,7 +12,6 @@ import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
@@ -23,8 +21,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -32,28 +28,16 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-
-import com.android.volley.ParseError;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoField;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
 public class mainPage extends AppCompatActivity {
     public DataController dc;
@@ -67,14 +51,11 @@ public class mainPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
         context = this;
-
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.SCHEDULE_EXACT_ALARM) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.SCHEDULE_EXACT_ALARM},
                     1);
-
         }
-
         dc = DataController.getInstance(context, Volley.newRequestQueue(this));
         if (!dc.medications().isEmpty()){
         CheckNextNotif();}
@@ -105,7 +86,6 @@ public class mainPage extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.CAMERA},
                     1);
-
         }
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             startActivity(intent);
@@ -221,7 +201,6 @@ public class mainPage extends AppCompatActivity {
                                 }
                                 break;
                                 }
-
                             }
                         break;
                     }
@@ -240,7 +219,6 @@ public class mainPage extends AppCompatActivity {
                         dc.newMed(newMed);}
                         }
                         break;
-
                     }
                     case 2:{
                         EditText monthText = (EditText) vp.findViewById(R.id.editTextDayOfMonth);
@@ -255,7 +233,6 @@ public class mainPage extends AppCompatActivity {
                         }
                         break;
                     }
-
                 }
                 }
                 if (allFull) { dialog.dismiss();
@@ -320,7 +297,6 @@ public class mainPage extends AppCompatActivity {
                         }
                     }
                 }).attach();
-
         dialogBuilder.setView(addNewMedsView);
         dialog = dialogBuilder.create();
         addButton.setOnTouchListener(new View.OnTouchListener() {
@@ -344,7 +320,6 @@ public class mainPage extends AppCompatActivity {
                                 //Get times
                                 RecyclerView recycler = byXDays.findViewById(R.id.recyclerByWeekTimes);
                                 RecyclerViewAdapter timeRVA = (RecyclerViewAdapter) recycler.getAdapter();
-
                                 DatePicker dateText = byXDays.findViewById(R.id.datePicker);
                                 LocalDate date = LocalDate.of(dateText.getYear(), dateText.getMonth()+1, dateText.getDayOfMonth());
                                 if (allFull) {
@@ -389,7 +364,6 @@ public class mainPage extends AppCompatActivity {
                         }
                         break;
                     }
-
                 }
                 if (allFull) { dialog.dismiss();
                     CheckNextNotif();}
@@ -405,9 +379,7 @@ public class mainPage extends AppCompatActivity {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 2, notifyIntent,PendingIntent.FLAG_IMMUTABLE);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Long time = nextDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent);
-        //if (alarmManager.canScheduleExactAlarms()){
-//        Toast.makeText(context, "Alarm set for" + time.toString(), Toast.LENGTH_LONG).show();}
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent);
     }
 
     class AdapterByWhich extends FragmentStateAdapter {
@@ -443,5 +415,4 @@ public class mainPage extends AppCompatActivity {
             return 3;
         }
     }
-
 }

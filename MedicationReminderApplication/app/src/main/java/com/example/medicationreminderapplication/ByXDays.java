@@ -1,24 +1,18 @@
 package com.example.medicationreminderapplication;
-
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
-
 
 public class ByXDays extends Fragment {
 
@@ -48,6 +42,4 @@ public class ByXDays extends Fragment {
         });
         return root;
     }
-
-
 }

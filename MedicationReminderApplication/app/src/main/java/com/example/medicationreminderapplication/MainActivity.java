@@ -1,7 +1,5 @@
 package com.example.medicationreminderapplication;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.KeyguardManager;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,9 +13,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         KeyguardManager kgm = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
         Intent screenLockIntent = kgm.createConfirmDeviceCredentialIntent("", "");
-
         startActivityForResult(screenLockIntent, LOCK_REQUEST_CODE);
-
     }
 
     @Override

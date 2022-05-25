@@ -1,5 +1,4 @@
 package com.example.medicationreminderapplication;
-import java.time.LocalTime;
 import java.util.*;
 
 public abstract class Medication {

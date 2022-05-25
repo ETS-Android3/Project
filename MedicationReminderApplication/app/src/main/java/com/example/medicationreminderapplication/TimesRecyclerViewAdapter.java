@@ -1,26 +1,17 @@
 package com.example.medicationreminderapplication;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class TimesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
@@ -31,7 +22,6 @@ public class TimesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     private final int SHOW_TIME = 1;
     private final int HIDE_TIME = 2;
 
-
     public TimesRecyclerViewAdapter(Context Context, ArrayList<ArrayList<LocalTime>> Times, ArrayList<String> days) {
         Log.e("Num of Days", days.toString());
         int counter = 0;
@@ -40,7 +30,6 @@ public class TimesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                 Times.add(new ArrayList<>());
             }
         }
-
         for (String day: days
              ) {
             list.add(new RecyclerEntity(day, Times.get(counter),false));
@@ -99,9 +88,7 @@ public class TimesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                     adapter.notifyDataSetChanged();
                 }
             });
-
         }
-
     }
 
     @Override

@@ -1,16 +1,10 @@
 package com.example.medicationreminderapplication;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
-
 import com.android.volley.toolbox.Volley;
-
-import java.util.ArrayList;
 
 public class nextMeds extends AppCompatActivity {
 

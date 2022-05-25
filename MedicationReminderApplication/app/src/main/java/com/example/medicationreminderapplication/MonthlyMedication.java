@@ -1,5 +1,4 @@
 package com.example.medicationreminderapplication;
-
 import java.util.Map;
 
 public class MonthlyMedication extends Medication {

@@ -1,32 +1,20 @@
 package com.example.medicationreminderapplication;
 import android.content.Context;
 import android.security.keystore.KeyGenParameterSpec;
-import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.security.crypto.EncryptedFile;
 import androidx.security.crypto.MasterKeys;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.RequestFuture;
-import com.android.volley.toolbox.Volley;
-import com.google.zxing.common.StringUtils;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.time.DayOfWeek;
@@ -34,12 +22,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
-
-import javax.net.ssl.HttpsURLConnection;
 
 public class DataController {
 
@@ -76,8 +58,6 @@ public class DataController {
     }
 //Reads Data from the file and decrypts it
     void CollectData(){
-// Although you can define your own key generation parameter specification, it's
-// recommended that you use the value specified here.
         KeyGenParameterSpec keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC;
         String mainKeyAlias = null;
         try {
